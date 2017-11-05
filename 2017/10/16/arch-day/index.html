@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="##0x00病起
+昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。
+0x01">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="greyd0g">
+    
+
+    <!-- Title -->
+    
+    <title>arch_day | welcome to my heart!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-puzzle-piece"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>arch_day</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>##0x00病起</p>
+<p>昨晚给arch装完n卡驱动，一通乱配，关机睡觉。<br>早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。<br>直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。</p>
+<h2 id="0x01病重"><a href="#0x01病重" class="headerlink" title="0x01病重"></a>0x01病重</h2><p>幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。<br>准备工作结束，插上u盘。启动，出现欢迎界面，选择非free驱动，一直停留在加载界面。难道是我硬件坏了(:.<br>也许是软件坏了，用dd吧，果断又起了个ubuntu虚拟机，未果。<br>是不是17太新了，换个16，未果。。<br>换个发行版吧，哎，antergos好像不错，几经测试未果。<br>跑了快10g的流量，算了就装原版arch吧。</p>
+<h2 id="0x02回归"><a href="#0x02回归" class="headerlink" title="0x02回归"></a>0x02回归</h2><p>下完镜像，整好u盘，成功启动，安装系统。嗖嗖就搞定。<br>因为固态原本就是ext4格式，就没有分盘，直接挂载，rm -rf *.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">mount /dev/sda /mnt</div><div class="line">cd /mnt &amp;&amp; rm -rf *</div><div class="line">pacstrap /mnt base base-devel</div><div class="line">genfstab -U -p /mnt &gt;&gt; /mnt/etc/fstab</div><div class="line">arch-chroot /mnt</div><div class="line">vi /etc/locale.gen 设置en_US.UTF-8 UTF-8  zh_CN.UTF-8 UTF-8</div><div class="line">locale-gen</div><div class="line">echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</div><div class="line">export LANG=en_US.UTF-8</div><div class="line">ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</div><div class="line">hwclock --systohc --utc</div><div class="line">vi /etc/pacman.conf  添加yaourt 和multilib</div><div class="line">passwd 添加密码</div><div class="line">useradd -m -g users -G wheel,storage,power -s /bin/bash greydog</div><div class="line">pass greydog</div><div class="line">pacman -S sudo</div><div class="line">vi /etc/sudoers</div><div class="line">pacman -S grub-bios</div><div class="line">grub-install --target=i386-pc --recheck /dev/sda</div><div class="line">cp /usr/share/locale/zh_CN/LC_MESSAGES/grub.mo /boot/grub/locale/zh-CN.mo</div><div class="line">grub-mkconfig -o /boot/grub/grub.cfg</div><div class="line">umount /mnt</div></pre></td></tr></table></figure></p>
+<p>敲完上面的命令，系统也就安装完了。一个纯净的arch就展现在了我的面前，又到了折腾驱动折腾桌面的环节.</p>
+<h2 id="没死接着折腾"><a href="#没死接着折腾" class="headerlink" title="没死接着折腾"></a>没死接着折腾</h2><p><code>sudo pacman -S alsa-utils xf86-video-vesa xorg xorg-xinit
+sudo pacman -S  nivide(对 我执着于闭源驱动)</code></p>
+<p>wiki上说要进行配置，特么产生一个conf桌面都起不来，无奈拖鞋删掉conf</p>
+<p><code>sudo pacman -S zsh git unrar zip unzip openssh glances htop iftop screenfetch tree vlc wget net-tools</code></p>
+<p>yaourt 安装失败，提示target not found<br>果断换国外源，done。<br><code>pacman -S i3lock i3status compton dmenu feh, compton
+yaourt -S i3-gaps</code></p>
+<p>抄了一波配置，回归我帅气的桌面。</p>
+<p><code>yaourt -s wqy-weihei ibus ibus-pinyin ibus-googlepinyin google-chrome firefox
+scrot  ntfs-3g</code></p>
+<p>##环境搭建</p>
+<p><code>youart -S virtualbox vagrant
+yaourt -S python2-pip
+pip2 install pwntools</code></p>
+<p>突然爆炸，发现自己只拷贝了虚拟机配置文件，没有把虚拟机拉过来。又要消耗一大波流量，目测假期流量快30多G了。</p>
+<h2 id="继续前行"><a href="#继续前行" class="headerlink" title="继续前行"></a>继续前行</h2><p>发现还有n多配置需要去完成，只能边用边配置了，且行且珍惜。</p>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 10 月 16 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
+</script>
+
+    <!-- Google Analytics -->
+    
+
+</body>
+
+</html>
