@@ -1,77 +1,321 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
 
-<!-- Head tag -->
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
-    
-        <meta name="description" content="##0x00病起
-昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。
-0x01">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="greyd0g">
-    
-
-    <!-- Title -->
-    
-    <title>arch_day | welcome to my heart!</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Custom Fonts -->
-    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
 
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="##0x00病起 昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。 0x01病重幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。准">
+<meta property="og:type" content="article">
+<meta property="og:title" content="arch_day">
+<meta property="og:url" content="http://yoursite.com/2017/10/16/arch-day/index.html">
+<meta property="og:site_name" content="greyd0g&#39; blog">
+<meta property="og:description" content="##0x00病起 昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。 0x01病重幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。准">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-05T01:18:36.637Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="arch_day">
+<meta name="twitter:description" content="##0x00病起 昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。 0x01病重幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。准">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/16/arch-day/"/>
+
+
+
+
+
+  <title>arch_day | greyd0g' blog</title>
+  
+
+
+
+
+
+
+
+
 </head>
 
-<body>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-    <!-- Content -->
-    <section class="article-container">
-<!-- Back Home -->
-<a class="nav-back" href="/">
-    <i class="fa fa-puzzle-piece"></i>
-</a>
+  
+  
+    
+  
 
-<!-- Page Header -->
-<header class="intro-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>arch_day</h1>
-                </div>
-            </div>
-        </div>
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">greyd0g' blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
     </div>
-</header>
+      
+        <p class="site-subtitle">good good study</p>
+      
+  </div>
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-            <!-- Post Main Content -->
-            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <p>##0x00病起</p>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/arch-day/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="greyd0g">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="greyd0g' blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">arch_day</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-16T15:41:57+08:00">
+                2017-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/16/arch-day/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/10/16/arch-day/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>##0x00病起</p>
 <p>昨晚给arch装完n卡驱动，一通乱配，关机睡觉。<br>早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。<br>直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。</p>
 <h2 id="0x01病重"><a href="#0x01病重" class="headerlink" title="0x01病重"></a>0x01病重</h2><p>幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。<br>准备工作结束，插上u盘。启动，出现欢迎界面，选择非free驱动，一直停留在加载界面。难道是我硬件坏了(:.<br>也许是软件坏了，用dd吧，果断又起了个ubuntu虚拟机，未果。<br>是不是17太新了，换个16，未果。。<br>换个发行版吧，哎，antergos好像不错，几经测试未果。<br>跑了快10g的流量，算了就装原版arch吧。</p>
 <h2 id="0x02回归"><a href="#0x02回归" class="headerlink" title="0x02回归"></a>0x02回归</h2><p>下完镜像，整好u盘，成功启动，安装系统。嗖嗖就搞定。<br>因为固态原本就是ext4格式，就没有分盘，直接挂载，rm -rf *.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">mount /dev/sda /mnt</div><div class="line">cd /mnt &amp;&amp; rm -rf *</div><div class="line">pacstrap /mnt base base-devel</div><div class="line">genfstab -U -p /mnt &gt;&gt; /mnt/etc/fstab</div><div class="line">arch-chroot /mnt</div><div class="line">vi /etc/locale.gen 设置en_US.UTF-8 UTF-8  zh_CN.UTF-8 UTF-8</div><div class="line">locale-gen</div><div class="line">echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</div><div class="line">export LANG=en_US.UTF-8</div><div class="line">ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</div><div class="line">hwclock --systohc --utc</div><div class="line">vi /etc/pacman.conf  添加yaourt 和multilib</div><div class="line">passwd 添加密码</div><div class="line">useradd -m -g users -G wheel,storage,power -s /bin/bash greydog</div><div class="line">pass greydog</div><div class="line">pacman -S sudo</div><div class="line">vi /etc/sudoers</div><div class="line">pacman -S grub-bios</div><div class="line">grub-install --target=i386-pc --recheck /dev/sda</div><div class="line">cp /usr/share/locale/zh_CN/LC_MESSAGES/grub.mo /boot/grub/locale/zh-CN.mo</div><div class="line">grub-mkconfig -o /boot/grub/grub.cfg</div><div class="line">umount /mnt</div></pre></td></tr></table></figure></p>
@@ -92,44 +336,422 @@ pip2 install pwntools</code></p>
 <p>突然爆炸，发现自己只拷贝了虚拟机配置文件，没有把虚拟机拉过来。又要消耗一大波流量，目测假期流量快30多G了。</p>
 <h2 id="继续前行"><a href="#继续前行" class="headerlink" title="继续前行"></a>继续前行</h2><p>发现还有n多配置需要去完成，只能边用边配置了，且行且珍惜。</p>
 
- 
-                <!-- Meta -->
-                <div class="post-meta">
-                    <hr>
-                    <br>
-                    <div class="post-tags">
-                        
-                    </div>
-                    <div class="post-date">
-                        2017 年 10 月 16 日
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comments -->
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <!-- Disqus Comments -->
-
-
-            </div>
-        </div>
+      
     </div>
-</article>
-</section>
-
-    <!-- Scripts -->
-    <!-- jQuery -->
-<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-<script type="text/javascript">
-	console.log('Hexo-theme-hollow designed by zchen9 🙋 © 2015-' + (new Date()).getFullYear());
-</script>
-
-    <!-- Google Analytics -->
+    
+    
     
 
-</body>
+    
 
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/16/pwnable-applestore/" rel="next" title="pwnable-applestore">
+                <i class="fa fa-chevron-left"></i> pwnable-applestore
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/05/donghua-chunqiu-pwn/" rel="prev" title="donghua_chunqiu_pwn">
+                donghua_chunqiu_pwn <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">greyd0g</p>
+              <p class="site-description motion-element" itemprop="description">day day up</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01病重"><span class="nav-number">1.</span> <span class="nav-text">0x01病重</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02回归"><span class="nav-number">2.</span> <span class="nav-text">0x02回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没死接着折腾"><span class="nav-number">3.</span> <span class="nav-text">没死接着折腾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继续前行"><span class="nav-number">4.</span> <span class="nav-text">继续前行</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">greyd0g</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/10/16/arch-day/';
+          this.page.identifier = '2017/10/16/arch-day/';
+          this.page.title = 'arch_day';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+</body>
 </html>
