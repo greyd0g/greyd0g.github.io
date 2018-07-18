@@ -199,6 +199,16 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            友情链接
+          </a>
+        </li>
+      
 
       
     </ul>
@@ -318,7 +328,7 @@
         <p>##0x00病起</p>
 <p>昨晚给arch装完n卡驱动，一通乱配，关机睡觉。<br>早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。<br>直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。</p>
 <h2 id="0x01病重"><a href="#0x01病重" class="headerlink" title="0x01病重"></a>0x01病重</h2><p>幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。<br>准备工作结束，插上u盘。启动，出现欢迎界面，选择非free驱动，一直停留在加载界面。难道是我硬件坏了(:.<br>也许是软件坏了，用dd吧，果断又起了个ubuntu虚拟机，未果。<br>是不是17太新了，换个16，未果。。<br>换个发行版吧，哎，antergos好像不错，几经测试未果。<br>跑了快10g的流量，算了就装原版arch吧。</p>
-<h2 id="0x02回归"><a href="#0x02回归" class="headerlink" title="0x02回归"></a>0x02回归</h2><p>下完镜像，整好u盘，成功启动，安装系统。嗖嗖就搞定。<br>因为固态原本就是ext4格式，就没有分盘，直接挂载，rm -rf *.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">mount /dev/sda /mnt</div><div class="line">cd /mnt &amp;&amp; rm -rf *</div><div class="line">pacstrap /mnt base base-devel</div><div class="line">genfstab -U -p /mnt &gt;&gt; /mnt/etc/fstab</div><div class="line">arch-chroot /mnt</div><div class="line">vi /etc/locale.gen 设置en_US.UTF-8 UTF-8  zh_CN.UTF-8 UTF-8</div><div class="line">locale-gen</div><div class="line">echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</div><div class="line">export LANG=en_US.UTF-8</div><div class="line">ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</div><div class="line">hwclock --systohc --utc</div><div class="line">vi /etc/pacman.conf  添加yaourt 和multilib</div><div class="line">passwd 添加密码</div><div class="line">useradd -m -g users -G wheel,storage,power -s /bin/bash greydog</div><div class="line">pass greydog</div><div class="line">pacman -S sudo</div><div class="line">vi /etc/sudoers</div><div class="line">pacman -S grub-bios</div><div class="line">grub-install --target=i386-pc --recheck /dev/sda</div><div class="line">cp /usr/share/locale/zh_CN/LC_MESSAGES/grub.mo /boot/grub/locale/zh-CN.mo</div><div class="line">grub-mkconfig -o /boot/grub/grub.cfg</div><div class="line">umount /mnt</div></pre></td></tr></table></figure></p>
+<h2 id="0x02回归"><a href="#0x02回归" class="headerlink" title="0x02回归"></a>0x02回归</h2><p>下完镜像，整好u盘，成功启动，安装系统。嗖嗖就搞定。<br>因为固态原本就是ext4格式，就没有分盘，直接挂载，rm -rf *.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/sda /mnt</span><br><span class="line">cd /mnt &amp;&amp; rm -rf *</span><br><span class="line">pacstrap /mnt base base-devel</span><br><span class="line">genfstab -U -p /mnt &gt;&gt; /mnt/etc/fstab</span><br><span class="line">arch-chroot /mnt</span><br><span class="line">vi /etc/locale.gen 设置en_US.UTF-8 UTF-8  zh_CN.UTF-8 UTF-8</span><br><span class="line">locale-gen</span><br><span class="line">echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</span><br><span class="line">export LANG=en_US.UTF-8</span><br><span class="line">ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br><span class="line">hwclock --systohc --utc</span><br><span class="line">vi /etc/pacman.conf  添加yaourt 和multilib</span><br><span class="line">passwd 添加密码</span><br><span class="line">useradd -m -g users -G wheel,storage,power -s /bin/bash greydog</span><br><span class="line">pass greydog</span><br><span class="line">pacman -S sudo</span><br><span class="line">vi /etc/sudoers</span><br><span class="line">pacman -S grub-bios</span><br><span class="line">grub-install --target=i386-pc --recheck /dev/sda</span><br><span class="line">cp /usr/share/locale/zh_CN/LC_MESSAGES/grub.mo /boot/grub/locale/zh-CN.mo</span><br><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br><span class="line">umount /mnt</span><br></pre></td></tr></table></figure></p>
 <p>敲完上面的命令，系统也就安装完了。一个纯净的arch就展现在了我的面前，又到了折腾驱动折腾桌面的环节.</p>
 <h2 id="没死接着折腾"><a href="#没死接着折腾" class="headerlink" title="没死接着折腾"></a>没死接着折腾</h2><p><code>sudo pacman -S alsa-utils xf86-video-vesa xorg xorg-xinit
 sudo pacman -S  nivide(对 我执着于闭源驱动)</code></p>
@@ -487,6 +497,48 @@ pip2 install pwntools</code></p>
           
 
           
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.lovei.org" title="腹黑's Blog" target="_blank">腹黑's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.blogsir.com.cn" title="江sir's Blog" target="_blank">江sir's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sec2hack.com/" title="Wfox's Blog" target="_blank">Wfox's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://brucetg.github.io/" title="Brucetg's Blog" target="_blank">Brucetg's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/whklhhhh" title="奈沙夜影's Blog" target="_blank">奈沙夜影's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cyto.top/" title="Cytosineの's Blog" target="_blank">Cytosineの's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.smallflower.xin/" title="小花' Blog" target="_blank">小花' Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.get1t.cn/" title="FraMeQ's Blog" target="_blank">FraMeQ's Blog</a>
+                  </li>
+                
+              </ul>
+            </div>
           
 
           
