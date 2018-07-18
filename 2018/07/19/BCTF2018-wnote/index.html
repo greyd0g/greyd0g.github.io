@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="pwn | ctf," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="##0x00病起 昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。 0x01病重幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。准">
+<meta name="description" content="BCTF2018-WNOTE题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for G">
+<meta name="keywords" content="pwn | ctf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="arch_day">
-<meta property="og:url" content="http://yoursite.com/2017/10/16/arch-day/index.html">
+<meta property="og:title" content="BCTF2018-wnote">
+<meta property="og:url" content="http://yoursite.com/2018/07/19/BCTF2018-wnote/index.html">
 <meta property="og:site_name" content="greyd0g&#39; blog">
-<meta property="og:description" content="##0x00病起 昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。 0x01病重幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。准">
+<meta property="og:description" content="BCTF2018-WNOTE题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for G">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T01:18:36.637Z">
+<meta property="og:updated_time" content="2018-07-18T21:37:03.797Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="arch_day">
-<meta name="twitter:description" content="##0x00病起 昨晚给arch装完n卡驱动，一通乱配，关机睡觉。早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。 0x01病重幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。准">
+<meta name="twitter:title" content="BCTF2018-wnote">
+<meta name="twitter:description" content="BCTF2018-WNOTE题目 文件 12345678910root@261f8c67866c:/pwn/wnote# file wnotewnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for G">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/16/arch-day/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/19/BCTF2018-wnote/"/>
 
 
 
 
 
-  <title>arch_day | greyd0g' blog</title>
+  <title>BCTF2018-wnote | greyd0g' blog</title>
   
 
 
@@ -242,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/arch-day/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/BCTF2018-wnote/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="greyd0g">
@@ -259,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">arch_day</h1>
+          <h1 class="post-title" itemprop="name headline">BCTF2018-wnote</h1>
         
 
         <div class="post-meta">
@@ -271,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-16T15:41:57+08:00">
-                2017-10-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T05:35:46+08:00">
+                2018-07-19
               </time>
             
 
@@ -290,8 +291,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/10/16/arch-day/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2017/10/16/arch-day/" itemprop="commentsCount"></span>
+                <a href="/2018/07/19/BCTF2018-wnote/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/19/BCTF2018-wnote/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -324,26 +325,47 @@
       
 
       
-        <p>##0x00病起</p>
-<p>昨晚给arch装完n卡驱动，一通乱配，关机睡觉。<br>早上起床就泪奔了，桌面卡死进不去，虚拟终端也进不去。果断单用户模式，又是一通乱配乱删。<br>直接内核模块挂载出错，心累。。。。。。不放弃，接着怼，手机开多页真的看起来不舒服。经过权衡，直接推倒重装。备份完资料，下载manjaro。</p>
-<h2 id="0x01病重"><a href="#0x01病重" class="headerlink" title="0x01病重"></a>0x01病重</h2><p>幸好网速快，社区i3版很快就下载好了。下载win32diskmager。准备好u盘，烧好镜像。<br>准备工作结束，插上u盘。启动，出现欢迎界面，选择非free驱动，一直停留在加载界面。难道是我硬件坏了(:.<br>也许是软件坏了，用dd吧，果断又起了个ubuntu虚拟机，未果。<br>是不是17太新了，换个16，未果。。<br>换个发行版吧，哎，antergos好像不错，几经测试未果。<br>跑了快10g的流量，算了就装原版arch吧。</p>
-<h2 id="0x02回归"><a href="#0x02回归" class="headerlink" title="0x02回归"></a>0x02回归</h2><p>下完镜像，整好u盘，成功启动，安装系统。嗖嗖就搞定。<br>因为固态原本就是ext4格式，就没有分盘，直接挂载，rm -rf *.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/sda /mnt</span><br><span class="line">cd /mnt &amp;&amp; rm -rf *</span><br><span class="line">pacstrap /mnt base base-devel</span><br><span class="line">genfstab -U -p /mnt &gt;&gt; /mnt/etc/fstab</span><br><span class="line">arch-chroot /mnt</span><br><span class="line">vi /etc/locale.gen 设置en_US.UTF-8 UTF-8  zh_CN.UTF-8 UTF-8</span><br><span class="line">locale-gen</span><br><span class="line">echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</span><br><span class="line">export LANG=en_US.UTF-8</span><br><span class="line">ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br><span class="line">hwclock --systohc --utc</span><br><span class="line">vi /etc/pacman.conf  添加yaourt 和multilib</span><br><span class="line">passwd 添加密码</span><br><span class="line">useradd -m -g users -G wheel,storage,power -s /bin/bash greydog</span><br><span class="line">pass greydog</span><br><span class="line">pacman -S sudo</span><br><span class="line">vi /etc/sudoers</span><br><span class="line">pacman -S grub-bios</span><br><span class="line">grub-install --target=i386-pc --recheck /dev/sda</span><br><span class="line">cp /usr/share/locale/zh_CN/LC_MESSAGES/grub.mo /boot/grub/locale/zh-CN.mo</span><br><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br><span class="line">umount /mnt</span><br></pre></td></tr></table></figure></p>
-<p>敲完上面的命令，系统也就安装完了。一个纯净的arch就展现在了我的面前，又到了折腾驱动折腾桌面的环节.</p>
-<h2 id="没死接着折腾"><a href="#没死接着折腾" class="headerlink" title="没死接着折腾"></a>没死接着折腾</h2><p><code>sudo pacman -S alsa-utils xf86-video-vesa xorg xorg-xinit
-sudo pacman -S  nivide(对 我执着于闭源驱动)</code></p>
-<p>wiki上说要进行配置，特么产生一个conf桌面都起不来，无奈拖鞋删掉conf</p>
-<p><code>sudo pacman -S zsh git unrar zip unzip openssh glances htop iftop screenfetch tree vlc wget net-tools</code></p>
-<p>yaourt 安装失败，提示target not found<br>果断换国外源，done。<br><code>pacman -S i3lock i3status compton dmenu feh, compton
-yaourt -S i3-gaps</code></p>
-<p>抄了一波配置，回归我帅气的桌面。</p>
-<p><code>yaourt -s wqy-weihei ibus ibus-pinyin ibus-googlepinyin google-chrome firefox
-scrot  ntfs-3g</code></p>
-<p>##环境搭建</p>
-<p><code>youart -S virtualbox vagrant
-yaourt -S python2-pip
-pip2 install pwntools</code></p>
-<p>突然爆炸，发现自己只拷贝了虚拟机配置文件，没有把虚拟机拉过来。又要消耗一大波流量，目测假期流量快30多G了。</p>
-<h2 id="继续前行"><a href="#继续前行" class="headerlink" title="继续前行"></a>继续前行</h2><p>发现还有n多配置需要去完成，只能边用边配置了，且行且珍惜。</p>
+        <h2 id="BCTF2018-WNOTE"><a href="#BCTF2018-WNOTE" class="headerlink" title="BCTF2018-WNOTE"></a>BCTF2018-WNOTE</h2><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a><code>题目</code></h2><ul>
+<li><p>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@261f8c67866c:/pwn/wnote# file wnote</span><br><span class="line">wnote: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=684d0cb0365cd02a87cff0614e93e462659047d0, not stripped</span><br><span class="line">64位elf文件动态链接</span><br><span class="line">root@261f8c67866c:/pwn/wnote# checksec wnote</span><br><span class="line">[*] &apos;/pwn/wnote/wnote&apos;</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">== Welcome to WOLLEY note manager V1.12 ==</span><br><span class="line">==     1. Add note                      ==</span><br><span class="line">==     2. Edit note                     ==</span><br><span class="line">==     3. Delete note                   ==</span><br><span class="line">==     4. Encrypt note                  ==</span><br><span class="line">==     5. Decrypt note                  ==</span><br><span class="line">==     6. List one note                 ==</span><br><span class="line">==     7. List all note                 ==</span><br><span class="line">==     8. Exit note                     ==</span><br><span class="line">==     Enter a number to start...       ==</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">calloc(1uLL, 0x1E0uLL); 存放结构体数组</span><br><span class="line">note 结构体</span><br><span class="line">0x0	 ptr</span><br><span class="line">0x8  size</span><br><span class="line">0x10 encrypt#加密标志</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h2>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if ( size &gt; 0x20 )</span><br><span class="line">&#123;</span><br><span class="line">  v27 = 0x40LL;</span><br><span class="line">  if ( (size - 0x21LL) &gt; 0x1E )</span><br><span class="line">  &#123;</span><br><span class="line">    if ( (size - 0x41LL) &lt;= 0x3E )</span><br><span class="line">      v27 = 0x80LL;</span><br><span class="line">    else</span><br><span class="line">      v27 = (size + 15) &amp; 0xF;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>可以分配的堆快大小受到限制，只能得到0x20 0x50 0x80 大小的堆块。</p>
+<p>| 0x00-0x20                             |    input_size 0x20    |<br>| ————————————- | :——————-: |<br>| 0x21-0x3f                             |         0x40          |<br>| 0x40                                  | (input_size +0xf)&amp;0xf |<br>| 0x41-0x7f                             |         0x80          |<br>| 0x80-0x400                            | (input_size+0xf)&amp;0xf  |<br>| 输入size为0x40 或大于0x7f时会产生溢出 |                       |</p>
+</li>
+</ul>
+<ul>
+<li><p>漏洞利用</p>
+<ul>
+<li><p>info leak</p>
+<ul>
+<li>FD leak addr<ul>
+<li>通过溢出修改size造成overlap</li>
+<li>将数组中两个ptr指向同一个堆</li>
+<li>unsortbin leak libc</li>
+<li>fastbin leak heap</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>hijack rip</p>
+<ul>
+<li>unsortbin attack io_list_all</li>
+<li>通过溢出伪造堆块大小为0x60(fake file struct)，free</li>
+<li>再次malloc，触发_IO_flush_all_lockp getshell</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -359,6 +381,12 @@ pip2 install pwntools</code></p>
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/pwn-ctf/" rel="tag"># pwn | ctf</a>
+          
+        </div>
+      
 
       
       
@@ -368,8 +396,8 @@ pip2 install pwntools</code></p>
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/03/cuit-2017-pwn400/" rel="next" title="cuit_2017_pwn400">
-                <i class="fa fa-chevron-left"></i> cuit_2017_pwn400
+              <a href="/2017/11/12/hctf-levle2/" rel="next" title="hctf_levle2">
+                <i class="fa fa-chevron-left"></i> hctf_levle2
               </a>
             
           </div>
@@ -377,10 +405,6 @@ pip2 install pwntools</code></p>
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/05/donghua-chunqiu-pwn/" rel="prev" title="donghua_chunqiu_pwn">
-                donghua_chunqiu_pwn <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -553,7 +577,7 @@ pip2 install pwntools</code></p>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01病重"><span class="nav-number">1.</span> <span class="nav-text">0x01病重</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02回归"><span class="nav-number">2.</span> <span class="nav-text">0x02回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没死接着折腾"><span class="nav-number">3.</span> <span class="nav-text">没死接着折腾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继续前行"><span class="nav-number">4.</span> <span class="nav-text">继续前行</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BCTF2018-WNOTE"><span class="nav-number">1.</span> <span class="nav-text">BCTF2018-WNOTE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">2.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞"><span class="nav-number">3.</span> <span class="nav-text">漏洞</span></a></li></ol></div>
             
 
           </div>
