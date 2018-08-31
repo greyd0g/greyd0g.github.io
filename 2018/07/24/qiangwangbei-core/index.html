@@ -507,7 +507,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -814,17 +814,17 @@
       function renderGitment(){
         var gitment = new Gitmint({
             id: window.location.pathname, 
-            owner: 'greyd0g# MUST HAVE, Your Github ID',
-            repo: 'gitcomment# MUST HAVE, The repo you use to store Gitment comments',
+            owner: 'greyd0g',
+            repo: 'gitcomment',
             
             lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
             
             oauth: {
             
             
-                client_secret: '49e64e3c97f36a8034c37a86dfa044a8be29208e# EITHER this or proxy_gateway, Github access secret token for the Gitment',
+                client_secret: '49e64e3c97f36a8034c37a86dfa044a8be29208e',
             
-                client_id: '1a762312d58b3f30d273# MUST HAVE, Github client id for the Gitment'
+                client_id: '1a762312d58b3f30d273'
             }});
         gitment.render('gitment-container');
       }
